@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+// Load DI container
+$container = require __DIR__ . '/../app/bootstrap.php';
+
+$application = new \Symfony\Component\Console\Application();
+$application->addCommands([
+    new \Webby\Console\Assets($container->getByType(\Webby\System::class)),
+    new \Webby\Console\Install()
+]);
+
+$application->setCatchExceptions(false);
+try {
+    $output = new Symfony\Component\Console\Output\ConsoleOutput();
+    $application->run(null, $output);
+} catch (Exception $e) {
+
+    $application->renderException($e, $output);
+
+    \Tracy\Debugger::log($e);
+    $statusCode = $e->getCode();
+    $statusCode = is_numeric($statusCode) && $statusCode ? $statusCode : 1;
+    exit($statusCode);
+}

@@ -1,0 +1,9 @@
+vendor
+html/assets
+temp/*
+log/*
+content/*
+!temp/.htaccess
+!log/.htaccess
+!content/.htaccess
+

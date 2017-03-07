@@ -1,0 +1,42 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+#
+php:
+  date.timezone: Europe/Prague
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: Webby\Presenter\*Presenter
+session:
+    debugger: true
+
+latte:
+    macros:
+        - Webby\Latte\Macros
+
+unimapper:
+    adapters:
+        Webby: @webbyAdapter
+    cache: false
+    convention:
+        entity:  Webby\Model\Entity\*
+        repository: Webby\Model\Repository\*Repository
+
+services:
+    pageRepository: Webby\Model\Repository\PageRepository
+    themeRepository: Webby\Model\Repository\ThemeRepository
+    webbyAdapter: Webby\Model\Adapter(%contentDir%)
+    system: Webby\System(%contentDir%, %wwwDir%)
+    router: @system::getRouter
+
+extensions:
+    unimapper: UniMapper\Nette\Extension
+    plugins: Webby\DI\PluginExtension
+
+plugins:
+    pluginDir: %contentDir%/plugins
+
+parameters:
+    contentDir: %appDir%/../content

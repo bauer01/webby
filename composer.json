@@ -1,0 +1,34 @@
+{
+	"name": "bauer01/webby",
+	"type": "project",
+	"description": "A lightweight flat-file CMS written based on Nette framework",
+	"keywords": ["cms","flat-file cms","flat cms","flatfile cms","php","nette"],
+	"license": "Proprietary",
+	"authors": [
+		{
+			"name": "Bronislav Sedlák",
+			"homepage": "https://bronislavsedlak.com"
+		}
+	],
+	"require": {
+		"php": ">=7.0",
+		"nette/application": "^2.4",
+		"nette/bootstrap": "^2.4.2",
+		"nette/robot-loader": "^2.4",
+		"latte/latte": "^2.4",
+		"tracy/tracy": "^2.4",
+		"unimapper/unimapper": "dev-develop",
+		"unimapper/nette": "dev-develop",
+		"kriswallsmith/assetic": "^1.4",
+		"leafo/scssphp": "^0.6.6",
+		"ptachoire/cssembed": "^1.0",
+		"oyejorge/less.php": "v1.7.0.10",
+		"symfony/console": "^3.2"
+	},
+	"autoload": {
+			"psr-4": {"Webby\\": "app/Webby"}
+	},
+	"scripts": {
+		"post-create-project-cmd": "bin/system install"
+	}
+}
