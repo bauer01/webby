@@ -1,17 +1,17 @@
 {dump $webby}
 <!DOCTYPE html>
-<html n:attr="lang => $webby->system->getConfig('lang')">
+<html n:attr="lang => $webby->pages->getLanguage()">
 <head>
     <title>
-        {if $webby->link !== $webby->system->getConfig('homepage')}
-            {$webby->page['title'] . " " . $webby->system->getConfig('title_delimiter') . " "}
+        {if $webby->link !== $webby->pages->getHomepage()}
+            {$webby->page['title'] . " " . $webby->pages->getTitleDelimiter() . " "}
         {/if}
-        {$webby->system->getConfig('title')}
+        {$webby->pages->getTitle()}
     </title>
-    <meta n:attr="charset => $webby->system->getConfig('charset')" />
+    <meta n:attr="charset => $webby->pages->getCharset()" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta content="width=device-width, initial-scale=1, minimal-ui" name="viewport" />
-    <meta name="description" n:attr="content => $webby->system->getConfig('description')" />
+    <meta name="description" n:attr="content => $webby->pages->getDescription()" />
 
     <link rel="apple-touch-icon" sizes="57x57" href="{$baseUrl}/media/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="{$baseUrl}/media/favicon/apple-icon-60x60.png">
@@ -31,10 +31,10 @@
     <meta name="msapplication-TileImage" content="{$baseUrl}/media/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <link rel="stylesheet" href="{$baseUrl}/assets/{\Webby\System::ASSETS_STYLES}.css">
+    <link rel="stylesheet" href="{$baseUrl}/{$webby->theme->getAssetsDir()}/styles.css">
 </head>
 <body>
-    {include template.latte, sections => $webby->layout['sections']}
-    <script src="{$baseUrl}/assets/{\Webby\System::ASSETS_SCRIPTS}.js"></script>
+    {include template.latte, sections => $webby->theme->getLayout()['sections']}
+    <script src="{$baseUrl}/{$webby->theme->getAssetsDir()}/scripts.js"></script>
 </body>
 </html>

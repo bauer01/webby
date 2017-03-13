@@ -17,14 +17,12 @@ use Nette\Utils\Random;
 use Webby\Exception\AjaxException;
 use Webby\Exception\RedirectException;
 use Webby\Routing\Route;
-use Webby\System;
 
 class DefaultPresenter implements IPresenter
 {
 
     private $httpRequest;
     private $latte;
-    private $system;
     private $router;
     /** @var Request */
     private $request;
@@ -32,19 +30,13 @@ class DefaultPresenter implements IPresenter
     private $storedLink;
     private $container;
 
-    public function __construct(Container $container, \Nette\Http\Request $httpRequest, ILatteFactory $latteFactory, System $system, IRouter $router, Session $session)
+    public function __construct(Container $container, \Nette\Http\Request $httpRequest, ILatteFactory $latteFactory, IRouter $router, Session $session)
     {
         $this->container = $container;
         $this->httpRequest = $httpRequest;
         $this->latte = $latteFactory->create();
-        $this->system = $system;
         $this->router = $router;
         $this->session = $session->getSection("webby");
-    }
-
-    public function getSystem()
-    {
-        return $this->system;
     }
 
     /**
@@ -161,9 +153,10 @@ class DefaultPresenter implements IPresenter
             "basePath" => rtrim($url->getBasePath(), '/'),
             "webby" => (object) [
                 "link" => $link,
-                "layout" => $this->system->getLayout(),
                 "page" => $pageConfig,
-                "system" => $this->system,
+                "pages" => $this->container->getService("system.pages"),
+                "theme" => $this->container->getService("system.theme"),
+                "menus" => $this->container->getService("system.menus"),
                 "templateDir" => __DIR__
             ]
         ];

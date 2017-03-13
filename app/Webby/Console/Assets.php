@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webby\System;
-use Webby\Theme;
 
 class Assets extends Command
 {
@@ -47,13 +46,13 @@ class Assets extends Command
         $assetManager->set("js", $this->js);
         $assetManager->set("css", $this->css);
 
-        $writer = new AssetWriter(WWW_DIR . "/" . $this->theme->getAssetsDir());
+        $writer = new AssetWriter(WWW_DIR . "/assets");
         $writer->writeManagerAssets($assetManager);
     }
 
     private function loadThemeAssets($name)
     {
-        if (!empty($assets = $this->theme->getTheme()["assets"][$name])) {
+        if (!empty($assets = $this->theme->getConfig()["assets"][$name])) {
 
             // CDN
             if (!empty($assets["cdn"])) {

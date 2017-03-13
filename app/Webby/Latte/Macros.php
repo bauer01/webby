@@ -4,7 +4,6 @@ namespace Webby\Latte;
 
 use Latte\Compiler;
 use Latte\Macros\MacroSet;
-use Nette\Bridges\FormsLatte\FormMacros;
 
 class Macros extends MacroSet
 {
@@ -12,10 +11,6 @@ class Macros extends MacroSet
     public static function install(Compiler $compiler)
     {
         $macroSet = new static($compiler);
-
-        // Form macros
-        FormMacros::install($compiler);
-
 
         // {container structure => [ .. ], wrap => [ .. ], size => ..}
         $macroSet->addMacro(

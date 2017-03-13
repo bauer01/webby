@@ -3,6 +3,8 @@
 namespace Webby\System;
 
 
+use Nette\Neon\Neon;
+
 class Theme
 {
 
@@ -10,11 +12,12 @@ class Theme
     private $assetsDir;
     private $dir;
 
-    public function __construct($dir, $theme, $layout, $assetsDir)
+    public function __construct(array $config)
     {
-        $this->dir = $dir;
-        $this->config = yaml_parse_file($dir . "/theme.yml")["config"] + yaml_parse_file($dir . ".yml");
-        $this->assetsDir = $assetsDir;
+        $this->dir = $config["dir"] . "/" . $config['current'];
+        $this->config = Neon::decode(file_get_contents($this->dir . "/theme.neon"))["config"]
+            + Neon::decode(file_get_contents($this->dir . ".neon"));
+        $this->assetsDir = $config["assetsDir"];
     }
 
     /**

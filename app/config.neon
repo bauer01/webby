@@ -35,14 +35,13 @@ services:
 extensions:
     unimapper: UniMapper\Nette\Extension
     system: Webby\Extensions\System
-    menus: Webby\Extensions\Menus
 
 system:
-    assetsDir: %wwwDir%/assets
-    pagesDir: %contentDir%/pages
-
-menus:
-    items: []
+    theme:
+        dir: %contentDir%/themes
+        assetsDir: %wwwDir%/assets
+    pages:
+        dir: %contentDir%/pages
 
 parameters:
     contentDir: %appDir%/../content
