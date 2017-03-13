@@ -2,6 +2,7 @@
 
 namespace Webby\Console;
 
+use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
@@ -13,15 +14,20 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webby\System;
+use Webby\Theme;
 
 class Assets extends Command
 {
 
-    private $system;
+    private $js;
+    private $css;
+    private $theme;
 
-    public function __construct(System $system)
+    public function __construct(AssetCollection $js, AssetCollection $css, System\Theme $theme)
     {
-        $this->system = $system;
+        $this->js = $js;
+        $this->css = $css;
+        $this->theme = $theme;
         parent::__construct();
     }
 
@@ -34,34 +40,32 @@ class Assets extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->loadThemeAssets(System::ASSETS_SCRIPTS);
-        $this->loadThemeAssets(System::ASSETS_STYLES);
+        $this->loadThemeAssets("js");
+        $this->loadThemeAssets("css");
 
         $assetManager = new AssetManager();
-        $assetManager->set(System::ASSETS_SCRIPTS, $this->system->getAsset(System::ASSETS_SCRIPTS));
-        $assetManager->set(System::ASSETS_STYLES,  $this->system->getAsset(System::ASSETS_STYLES));
+        $assetManager->set("js", $this->js);
+        $assetManager->set("css", $this->css);
 
-        $writer = new AssetWriter(WWW_DIR . "/assets");
+        $writer = new AssetWriter(WWW_DIR . "/" . $this->theme->getAssetsDir());
         $writer->writeManagerAssets($assetManager);
     }
 
     private function loadThemeAssets($name)
     {
-        if (!empty($assets = $this->system->getTheme()["assets"][$name])) {
-
-            $asset = $this->system->getAsset($name);
+        if (!empty($assets = $this->theme->getTheme()["assets"][$name])) {
 
             // CDN
             if (!empty($assets["cdn"])) {
                 foreach ($assets["cdn"] as $url) {
-                    $asset->add(new HttpAsset($url));
+                    $this->{$name}->add(new HttpAsset($url));
                 }
             }
 
             // Local
             if (!empty($assets["local"])) {
                 foreach ($assets["local"] as $path) {
-                    $asset->add(new FileAsset($this->system->getThemeDir() . "/" . $path, $name === "styles" ? [
+                    $this->{$name}->add(new FileAsset($this->theme->getDir() . "/" . $path, $name === "styles" ? [
                         new ScssphpFilter(),
                         new LessphpFilter(),
                         new CssImportFilter()

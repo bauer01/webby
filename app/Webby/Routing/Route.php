@@ -4,6 +4,7 @@ namespace Webby\Routing;
 
 use Nette\Application\IRouter;
 use Nette\Application\Request;
+use Nette\Application\Routers\RouteList;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
 
@@ -15,6 +16,14 @@ class Route implements IRouter
     public function __construct(callable $matchCb)
     {
         $this->matchCb = $matchCb;
+    }
+
+    /**
+     * @return RouteList
+     */
+    public static function createRouter()
+    {
+        return new RouteList();
     }
 
     public function match(IRequest $request)

@@ -7,8 +7,10 @@ php:
 
 application:
 	errorPresenter: Error
+	scanDirs: false
 	mapping:
 		*: Webby\Presenter\*Presenter
+
 session:
     debugger: true
 
@@ -21,22 +23,29 @@ unimapper:
         Webby: @webbyAdapter
     cache: false
     convention:
-        entity:  Webby\Model\Entity\*
+        entity: Webby\Model\Entity\*
         repository: Webby\Model\Repository\*Repository
 
 services:
     pageRepository: Webby\Model\Repository\PageRepository
     themeRepository: Webby\Model\Repository\ThemeRepository
     webbyAdapter: Webby\Model\Adapter(%contentDir%)
-    system: Webby\System(%contentDir%, %wwwDir%)
-    router: @system::getRouter
+    router: Webby\Routing\Route::createRouter
 
 extensions:
     unimapper: UniMapper\Nette\Extension
-    plugins: Webby\DI\PluginExtension
+    system: Webby\Extensions\System
+    menus: Webby\Extensions\Menus
 
-plugins:
-    pluginDir: %contentDir%/plugins
+system:
+    assetsDir: %wwwDir%/assets
+    pagesDir: %contentDir%/pages
+
+menus:
+    items: []
 
 parameters:
     contentDir: %appDir%/../content
+
+includes:
+    - ../content/settings.neon

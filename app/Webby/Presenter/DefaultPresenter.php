@@ -10,6 +10,7 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Nette\Bridges\ApplicationLatte\ILatteFactory;
+use Nette\DI\Container;
 use Nette\Http\Session;
 use Nette\Http\UrlScript;
 use Nette\Utils\Random;
@@ -29,9 +30,11 @@ class DefaultPresenter implements IPresenter
     private $request;
     private $session;
     private $storedLink;
+    private $container;
 
-    public function __construct(\Nette\Http\Request $httpRequest, ILatteFactory $latteFactory, System $system, IRouter $router, Session $session)
+    public function __construct(Container $container, \Nette\Http\Request $httpRequest, ILatteFactory $latteFactory, System $system, IRouter $router, Session $session)
     {
+        $this->container = $container;
         $this->httpRequest = $httpRequest;
         $this->latte = $latteFactory->create();
         $this->system = $system;

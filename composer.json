@@ -1,5 +1,5 @@
 {
-	"name": "bauer01/webby",
+	"name": "webby/webby",
 	"type": "project",
 	"description": "A lightweight flat-file CMS written based on Nette framework",
 	"keywords": ["cms","flat-file cms","flat cms","flatfile cms","php","nette"],
@@ -10,11 +10,16 @@
 			"homepage": "https://bronislavsedlak.com"
 		}
 	],
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "http://toran-proxy.bronislavsedlak.com/repo/private/"
+		}
+	],
 	"require": {
 		"php": "^7.0",
 		"nette/application": "^2.4",
-		"nette/bootstrap": "^2.4.2",
-		"nette/robot-loader": "^2.4",
+		"nette/bootstrap": "^2.4",
 		"latte/latte": "^2.4",
 		"tracy/tracy": "^2.4",
 		"unimapper/unimapper": "dev-develop",
@@ -23,12 +28,32 @@
 		"leafo/scssphp": "^0.6.6",
 		"ptachoire/cssembed": "^1.0",
 		"oyejorge/less.php": "v1.7.0.10",
-		"symfony/console": "^3.2"
+		"symfony/console": "^3.2",
+		"oomphinc/composer-installers-extender": "^1.1",
+		"composer/composer": "^1.4",
+		"wikimedia/composer-merge-plugin": "^1.3"
 	},
 	"autoload": {
 		"psr-4": {"Webby\\": "app/Webby"}
 	},
 	"scripts": {
 		"post-create-project-cmd": "bin/system install"
+	},
+	"minimum-stability": "dev",
+	"extra": {
+		"installer-types": ["webby-extension", "webby-theme"],
+		"installer-paths": {
+			"content/extensions/{$name}/": ["type:webby-extension"],
+			"content/themes/{$name}/": ["type:webby-theme"]
+		},
+		"merge-plugin": {
+			"include": [
+				"content/extensions.json"
+			]
+		}
+	},
+	"config": {
+		"secure-http": false,
+		"preferred-install": "dist"
 	}
 }

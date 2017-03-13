@@ -3,7 +3,7 @@
 define('WWW_DIR', __DIR__ . "/../html");
 
 // Load dependencies
-if (@!include __DIR__ . '/../vendor/autoload.php') {
+if (@!$composer = include __DIR__ . '/../vendor/autoload.php') {
     die('Install dependencies using `composer update`');
 }
 
