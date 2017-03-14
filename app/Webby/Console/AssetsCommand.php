@@ -9,6 +9,7 @@ use Assetic\AssetWriter;
 use Assetic\Filter\CssImportFilter;
 use Assetic\Filter\LessphpFilter;
 use Assetic\Filter\ScssphpFilter;
+use Nette\InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,6 +43,9 @@ class AssetsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln("Cleaning assets dir...");
+        shell_exec("rm -rf " . WWW_DIR . "/assets");
+
         $output->writeln("Dumping CSS & JS files...");
         $this->dumpCssJs();
 
@@ -66,9 +70,16 @@ class AssetsCommand extends Command
     {
         if (!empty($media = $this->theme->getConfig()["assets"]["media"]["local"])) {
 
-            mkdir($outputPath = WWW_DIR . "/assets/media/theme", 0775, true);
+            if (!is_dir($outputPath = WWW_DIR . "/assets/media/theme")) {
+                mkdir($outputPath, 0775, true);
+            }
+
             foreach ($media as $relativePath) {
-                shell_exec("cp -R " . $this->theme->getDir() . "/" . $relativePath . "/* " . $outputPath);
+
+                if (!is_dir($sourcePath = $this->theme->getDir() . "/" . $relativePath)) {
+                    throw new InvalidArgumentException("Can not dump missing dir " . $sourcePath);
+                }
+                shell_exec("cp -R " . $sourcePath . "/* " . $outputPath);
             }
         }
     }
