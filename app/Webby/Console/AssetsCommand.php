@@ -20,11 +20,16 @@ class AssetsCommand extends Command
 
     private $assets;
     private $theme;
+    private $js;
+    private $css;
 
     public function __construct(Theme $theme, Assets $assets)
     {
         $this->theme = $theme;
         $this->assets = $assets;
+        $this->js = $this->assets->getJs();
+        $this->css = $this->assets->getCss();
+
         parent::__construct();
     }
 
@@ -50,8 +55,8 @@ class AssetsCommand extends Command
         $this->loadThemeAssets("css");
 
         $assetManager = new AssetManager();
-        $assetManager->set("js", $this->assets->getJs());
-        $assetManager->set("css", $this->assets->getCss());
+        $assetManager->set("js", $this->js);
+        $assetManager->set("css", $this->css);
 
         $writer = new AssetWriter(WWW_DIR . "/assets");
         $writer->writeManagerAssets($assetManager);
@@ -59,9 +64,9 @@ class AssetsCommand extends Command
 
     private function dumpMedia()
     {
-        if (!empty($media = $this->theme->getConfig()["assets"]["media"])) {
+        if (!empty($media = $this->theme->getConfig()["assets"]["media"]["local"])) {
 
-            $outputPath = WWW_DIR . "/assets/media/theme";
+            mkdir($outputPath = WWW_DIR . "/assets/media/theme", 0775, true);
             foreach ($media as $relativePath) {
                 shell_exec("cp -R " . $this->theme->getDir() . "/" . $relativePath . "/* " . $outputPath);
             }
