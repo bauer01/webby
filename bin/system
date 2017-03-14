@@ -6,13 +6,12 @@ $container = require __DIR__ . '/../app/bootstrap.php';
 
 $application = new \Symfony\Component\Console\Application();
 $application->addCommands([
-    new \Webby\Console\Assets(
-        $container->getService("system.js"),
-        $container->getService("system.css"),
+    new \Webby\Console\AssetsCommand(
+        $container->getService(\Webby\System\Assets::class),
         $container->getByType(\Webby\System\Theme::class)
     ),
-    new \Webby\Console\Install(),
-    new \Webby\Console\Package()
+    new \Webby\Console\InstallCommand(),
+    new \Webby\Console\PackageCommand()
 ]);
 
 $application->setCatchExceptions(false);

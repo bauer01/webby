@@ -3,8 +3,8 @@
 namespace Webby\Extensions;
 
 
-use Assetic\Asset\AssetCollection;
 use Nette\DI\CompilerExtension;
+use Webby\System\Assets;
 use Webby\System\Menus;
 use Webby\System\Pages;
 use Webby\System\Theme;
@@ -13,6 +13,10 @@ class System extends CompilerExtension
 {
 
     private $defaults = [
+        "assets" => [
+            "dir" => null,
+            "mediaDir" => null
+        ],
         "theme" => [
             "dir" => null,
             "current" => null,
@@ -51,15 +55,9 @@ class System extends CompilerExtension
                 ]
             );
 
-        // JS
-        $builder->addDefinition($this->prefix('js'))
-            ->setClass(AssetCollection::class)
-            ->addSetup("setTargetPath", ["scripts.js"]);
-
-        // CSS
-        $builder->addDefinition($this->prefix('css'))
-            ->setClass(AssetCollection::class)
-            ->addSetup("setTargetPath", ["styles.css"]);
+        // Assets
+        $builder->addDefinition($this->prefix('assets'))
+            ->setClass(Assets::class, [$config["assets"]]);
 
         // Theme
         $builder->addDefinition($this->prefix('theme'))

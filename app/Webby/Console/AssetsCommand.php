@@ -2,7 +2,6 @@
 
 namespace Webby\Console;
 
-use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
@@ -13,51 +12,70 @@ use Assetic\Filter\ScssphpFilter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Webby\System\Assets;
 use Webby\System\Theme;
 
-class Assets extends Command
+class AssetsCommand extends Command
 {
 
-    private $js;
-    private $css;
+    private $assets;
     private $theme;
 
-    public function __construct(AssetCollection $js, AssetCollection $css, Theme $theme)
+    public function __construct(Theme $theme, Assets $assets)
     {
-        $this->js = $js;
-        $this->css = $css;
         $this->theme = $theme;
+        $this->assets = $assets;
         parent::__construct();
     }
 
     protected function configure()
     {
         $this->setName('assets:dump')
-            ->setDescription('Generates assets.')
+            ->setDescription('Dumps assets.')
             ->setHelp('This command allows you to generate all frontend assets...');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln("Dumping CSS & JS files...");
+        $this->dumpCssJs();
+
+        $output->writeln("Dumping media files...");
+        $this->dumpMedia();
+    }
+
+    private function dumpCssJs()
+    {
         $this->loadThemeAssets("js");
         $this->loadThemeAssets("css");
 
         $assetManager = new AssetManager();
-        $assetManager->set("js", $this->js);
-        $assetManager->set("css", $this->css);
+        $assetManager->set("js", $this->assets->getJs());
+        $assetManager->set("css", $this->assets->getCss());
 
         $writer = new AssetWriter(WWW_DIR . "/assets");
         $writer->writeManagerAssets($assetManager);
     }
 
-    private function loadThemeAssets($name)
+    private function dumpMedia()
     {
-        if (!empty($assets = $this->theme->getConfig()["assets"][$name])) {
+        if (!empty($media = $this->theme->getConfig()["assets"]["media"])) {
+
+            $outputPath = WWW_DIR . "/assets/media/theme";
+            foreach ($media as $relativePath) {
+                shell_exec("cp -R " . $this->theme->getDir() . "/" . $relativePath . "/* " . $outputPath);
+            }
+        }
+    }
+
+    private function loadThemeAssets($type)
+    {
+        if (!empty($assets = $this->theme->getConfig()["assets"][$type])) {
 
             // CDN
             if (!empty($assets["cdn"])) {
                 foreach ($assets["cdn"] as $url) {
-                    $this->{$name}->add(new HttpAsset($url));
+                    $this->{$type}->add(new HttpAsset($url));
                 }
             }
 
@@ -68,7 +86,7 @@ class Assets extends Command
                     $path = $this->theme->getDir() . "/" . $path;
                     $filters = [];
 
-                    if ($name === "css") {
+                    if ($type === "css") {
 
                         $filters[] = new CssImportFilter();
                         switch (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
@@ -81,7 +99,7 @@ class Assets extends Command
                         }
                     }
 
-                    $this->{$name}->add(new FileAsset($path, $filters));
+                    $this->{$type}->add(new FileAsset($path, $filters));
                 }
             }
         }

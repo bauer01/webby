@@ -37,9 +37,11 @@ extensions:
     system: Webby\Extensions\System
 
 system:
+    assets:
+        dir: %wwwDir%/assets
+        mediaDir:
     theme:
         dir: %contentDir%/themes
-        assetsDir: %wwwDir%/assets
     pages:
         dir: %contentDir%/pages
 

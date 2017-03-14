@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Install extends Command
+class InstallCommand extends Command
 {
 
     protected function configure()
