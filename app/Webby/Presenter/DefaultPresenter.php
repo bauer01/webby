@@ -17,6 +17,8 @@ use Nette\Utils\Random;
 use Webby\Exception\AjaxException;
 use Webby\Exception\RedirectException;
 use Webby\Routing\Route;
+use Webby\System\Pages;
+use Webby\System\Theme;
 
 class DefaultPresenter implements IPresenter
 {
@@ -77,7 +79,7 @@ class DefaultPresenter implements IPresenter
 
     public function link($link, $args = [])
     {
-        if ($link === $this->system->getConfig("homepage")) {
+        if ($link === $this->container->getByType(Pages::class)->getHomepage()) {
             return $this->httpRequest->getUrl()->getBaseUrl();
         }
 
@@ -165,6 +167,7 @@ class DefaultPresenter implements IPresenter
     private function getParticles(array $pageConfig, array $particles, array $templateParameters)
     {
         $layout = $templateParameters["webby"]->layout;
+        $themeDir = $this->container->getByType(Theme::class)->getDir();
 
         $result = [];
         foreach ($layout["sections"] as $key => $section) {
@@ -177,7 +180,7 @@ class DefaultPresenter implements IPresenter
                         $lparticleId = $lcolumnId . "-particle" . $key . "-" . $particle["particle"];
                         if (in_array($particle["particle"], $particles)) {
                             $result[$lparticleId] = $this->latte->renderToString(
-                                $this->system->getThemeDir() . "/particles/" . $particle['particle'] . ".latte",
+                                $themeDir . "/particles/" . $particle['particle'] . ".latte",
                                 $templateParameters + [
                                     "options" => empty($particle['options']) ?: (object) $particle['options']
                                 ]
@@ -194,7 +197,7 @@ class DefaultPresenter implements IPresenter
                                             $particleId = $columnId . "-particle" . $key . "-" . $particle["particle"];
                                             if (in_array($particle["particle"], $particles)) {
                                                 $result[$particleId] = $this->latte->renderToString(
-                                                    $this->system->getThemeDir() . "/particles/" . $particle['particle'] . ".latte",
+                                                    $themeDir . "/particles/" . $particle['particle'] . ".latte",
                                                     $templateParameters + [
                                                         "options" => empty($particle['options']) ?: (object) $particle['options']
                                                     ]

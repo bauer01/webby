@@ -13,7 +13,7 @@ use Assetic\Filter\ScssphpFilter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Webby\System;
+use Webby\System\Theme;
 
 class Assets extends Command
 {
@@ -22,7 +22,7 @@ class Assets extends Command
     private $css;
     private $theme;
 
-    public function __construct(AssetCollection $js, AssetCollection $css, System\Theme $theme)
+    public function __construct(AssetCollection $js, AssetCollection $css, Theme $theme)
     {
         $this->js = $js;
         $this->css = $css;
@@ -64,11 +64,24 @@ class Assets extends Command
             // Local
             if (!empty($assets["local"])) {
                 foreach ($assets["local"] as $path) {
-                    $this->{$name}->add(new FileAsset($this->theme->getDir() . "/" . $path, $name === "styles" ? [
-                        new ScssphpFilter(),
-                        new LessphpFilter(),
-                        new CssImportFilter()
-                    ] : []));
+
+                    $path = $this->theme->getDir() . "/" . $path;
+                    $filters = [];
+
+                    if ($name === "css") {
+
+                        $filters[] = new CssImportFilter();
+                        switch (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
+                            case "less":
+                                $filters[] = new LessphpFilter();
+                                break;
+                            case "scss":
+                                $filters[] = new ScssphpFilter();
+                                break;
+                        }
+                    }
+
+                    $this->{$name}->add(new FileAsset($path, $filters));
                 }
             }
         }

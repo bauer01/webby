@@ -3,6 +3,8 @@
 namespace Webby\System;
 
 
+use Nette\InvalidArgumentException;
+
 class Menus
 {
 
@@ -18,6 +20,9 @@ class Menus
      */
     public function getMenu($key)
     {
+        if (!isset($this->items[$key])) {
+            throw new InvalidArgumentException("Menu '" . $key . "' not found!");
+        }
         return $this->items[$key];
     }
 
