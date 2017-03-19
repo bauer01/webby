@@ -5,7 +5,7 @@
 {/ifset}
 
 {foreach $sections as $key => $section}
-    {include #section, section => $section, structure => empty($section['structure']) ? [] : $webby->theme->getLayout()['structures'][$section['structure']], id => $id . "section" . $key}
+    {include #section, section => $section, structure => empty($section['structure']) ? [] : $container->getService('system.theme')->getStructure($section['structure']), id => $id . "section" . $key}
 {/foreach}
 
 {define section}
@@ -33,9 +33,8 @@
 {/define}
 
 {define particle}
-    {container particle, structure => $structure, element => empty($particle['element']) ? [] : $particle['element'], wrap => empty($particle['wrap']) ? [] : $particle['wrap']}
-        <div n:attr="id => $id">
-          {include $webby->theme->getDir() . "/particles/" . $particle['particle'] . ".latte", options => empty($particle['options']) ?: (object) $particle['options'], id => $id}
-        </div>
-    {/container}
+{dump $particle}
+    <div n:attr="id => $id" n:class="empty($particle['class']) ? null : $particle['class']">
+        {include $container->getService('system.particles')->getParticleTemplate($particle['particle']) options => empty($particle['options']) ?: (object) $particle['options'], id => $id}
+    </div>
 {/define}

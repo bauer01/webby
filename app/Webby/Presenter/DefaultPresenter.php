@@ -151,14 +151,12 @@ class DefaultPresenter implements IPresenter
         $url = $this->httpRequest->getUrl();
         return [
             "presenter" => $this,
+            "container" => $this->container,
             "baseUrl" => rtrim($url->getBaseUrl(), '/'),
             "basePath" => rtrim($url->getBasePath(), '/'),
             "webby" => (object) [
                 "link" => $link,
                 "page" => $pageConfig,
-                "pages" => $this->container->getService("system.pages"),
-                "theme" => $this->container->getService("system.theme"),
-                "menus" => $this->container->getService("system.menus"),
                 "templateDir" => __DIR__
             ]
         ];
@@ -185,7 +183,7 @@ class DefaultPresenter implements IPresenter
                                     "options" => empty($particle['options']) ?: (object) $particle['options']
                                 ]
                             );
-                        } elseif ($particle["particle"] === "page") {
+                        } elseif ($particle["particle"] === "system:page") {
 
                             foreach ($pageConfig["sections"] as $key => $section) {
                                 $sectionId = $lparticleId . "-section" . $key;

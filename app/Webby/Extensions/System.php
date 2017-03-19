@@ -7,6 +7,7 @@ use Nette\DI\CompilerExtension;
 use Webby\System\Assets;
 use Webby\System\Menus;
 use Webby\System\Pages;
+use Webby\System\Particles;
 use Webby\System\Theme;
 
 class System extends CompilerExtension
@@ -19,8 +20,7 @@ class System extends CompilerExtension
         ],
         "theme" => [
             "dir" => null,
-            "current" => null,
-            "assetsDir" => null
+            "current" => null
         ],
         "pages" => [
             "dir" => null,
@@ -31,7 +31,8 @@ class System extends CompilerExtension
             "title_delimiter" => "-",
             "description" => null
         ],
-        "menus" => []
+        "menus" => [],
+        "particles" => null
     ];
 
     public function loadConfiguration()
@@ -74,6 +75,15 @@ class System extends CompilerExtension
                 Menus::class,
                 [
                     $config["menus"]
+                ]
+            );
+
+        // Particles
+        $builder->addDefinition($this->prefix('particles'))
+            ->setClass(
+                Particles::class,
+                [
+                    $config["particles"]
                 ]
             );
     }

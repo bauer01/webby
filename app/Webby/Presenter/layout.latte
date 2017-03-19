@@ -1,17 +1,18 @@
 {dump $webby}
+{var $pages = $container->getService('system.pages')}
 <!DOCTYPE html>
-<html n:attr="lang => $webby->pages->getLanguage()">
+<html n:attr="lang => $pages->getLanguage()">
 <head>
     <title>
-        {if $webby->link !== $webby->pages->getHomepage()}
-            {$webby->page['title'] . " " . $webby->pages->getTitleDelimiter() . " "}
+        {if $webby->link !== $pages->getHomepage()}
+            {$webby->page['title'] . " " . $pages->getTitleDelimiter() . " "}
         {/if}
-        {$webby->pages->getTitle()}
+        {$pages->getTitle()}
     </title>
-    <meta n:attr="charset => $webby->pages->getCharset()" />
+    <meta n:attr="charset => $pages->getCharset()" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta content="width=device-width, initial-scale=1, minimal-ui" name="viewport" />
-    <meta name="description" n:attr="content => $webby->pages->getDescription()" />
+    <meta name="description" n:attr="content => $pages->getDescription()" />
 
     <link rel="apple-touch-icon" sizes="57x57" href="{$baseUrl}/media/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="{$baseUrl}/media/favicon/apple-icon-60x60.png">
@@ -34,7 +35,7 @@
     <link rel="stylesheet" href="{$baseUrl}/assets/styles.css">
 </head>
 <body>
-    {include template.latte, sections => $webby->theme->getLayout()['sections']}
+    {include template.latte, sections => $container->getService('system.theme')->getLayout()}
     <script src="{$baseUrl}/assets/scripts.js"></script>
 </body>
 </html>

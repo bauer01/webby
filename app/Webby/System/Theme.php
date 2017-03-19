@@ -8,16 +8,25 @@ use Nette\Neon\Neon;
 class Theme
 {
 
+    private $current;
     private $config = [];
-    private $assetsDir;
     private $dir;
+    private $layout;
 
     public function __construct(array $config)
     {
-        $this->dir = $config["dir"] . "/" . $config['current'];
-        $this->config = Neon::decode(file_get_contents($this->dir . "/theme.neon"))["config"]
-            + Neon::decode(file_get_contents($this->dir . ".neon"));
-        $this->assetsDir = $config["assetsDir"];
+        $this->current = $config["current"];
+        $this->layout = $config["layout"];
+        $this->dir = $config["dir"] . "/" . $this->current;
+        $this->config = Neon::decode(file_get_contents($this->dir . "/theme.neon"));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrent()
+    {
+        return $this->current;
     }
 
     /**
@@ -28,25 +37,27 @@ class Theme
         return $this->dir;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAssetsDir()
+    public function getLayout()
     {
-        return $this->assetsDir;
+        return Neon::decode(file_get_contents($this->dir . "/layouts/" . $this->layout . ".neon"));
+    }
+
+    public function getPage($name)
+    {
+        return Neon::decode(file_get_contents($this->dir . "/pages/" . $name . ".neon"));
+    }
+
+    public function getStructure($name)
+    {
+        return Neon::decode(file_get_contents($this->dir . "/structures/" . $name . ".neon"));
     }
 
     /**
-     * @return array
+     * @return array|mixed
      */
     public function getConfig()
     {
         return $this->config;
-    }
-
-    public function getLayout()
-    {
-        return $this->config["layouts"][$this->config["layout"]];
     }
 
 }

@@ -3,6 +3,7 @@
 namespace Webby\System;
 
 
+use Nette\Neon\Neon;
 use Webby\Presenter\DefaultPresenter;
 use Webby\Routing\Route;
 
@@ -92,7 +93,7 @@ class Pages
                 $link = $pagesConfig["homepage"];
             }
 
-            if (is_file($pagesConfig['dir'] . "/" . Route::linkToPath($link) . ".yml")) {
+            if (is_file($pagesConfig['dir'] . "/" . Route::linkToPath($link) . ".neon")) {
                 $pageConfig = self::loadPageConfig($pagesConfig["dir"], $link);
                 return [
                     "callback" => function (DefaultPresenter $presenter) use ($link, $pageConfig) {
@@ -108,7 +109,7 @@ class Pages
     public static function loadPageConfig($dir, $link)
     {
         // @todo caching
-        $config = yaml_parse_file($dir . "/" . Route::linkToPath($link) . ".yml");
+        $config = Neon::decode(file_get_contents($dir . "/" . Route::linkToPath($link) . ".neon"));
         if (!empty($config["extends"])) {
             // @todo intelligent merge
             $config += self::loadPageConfig($dir, $config["extends"]);

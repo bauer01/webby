@@ -68,7 +68,7 @@ class AssetsCommand extends Command
 
     private function dumpMedia()
     {
-        if (!empty($media = $this->theme->getConfig()["assets"]["media"]["local"])) {
+        if (!empty($media = $this->theme->getConfig()["assets"]["media"])) {
 
             if (!is_dir($outputPath = WWW_DIR . "/assets/media/theme")) {
                 mkdir($outputPath, 0775, true);

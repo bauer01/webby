@@ -42,7 +42,6 @@ class Assets
         return $this->css;
     }
 
-
     /**
      * @return mixed
      */
