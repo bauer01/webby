@@ -68,7 +68,7 @@ class AssetsCommand extends Command
 
     private function dumpMedia()
     {
-        if (!empty($media = $this->theme->getConfig()["assets"]["media"])) {
+        if (!empty($media = $this->theme->getConfig()["media"])) {
 
             if (!is_dir($outputPath = WWW_DIR . "/assets/media/theme")) {
                 mkdir($outputPath, 0775, true);
@@ -86,7 +86,7 @@ class AssetsCommand extends Command
 
     private function loadThemeAssets($type)
     {
-        if (!empty($assets = $this->theme->getConfig()["assets"][$type])) {
+        if (!empty($assets = $this->theme->getConfig()[$type])) {
 
             // CDN
             if (!empty($assets["cdn"])) {

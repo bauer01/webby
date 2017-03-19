@@ -33,8 +33,7 @@
 {/define}
 
 {define particle}
-{dump $particle}
     <div n:attr="id => $id" n:class="empty($particle['class']) ? null : $particle['class']">
-        {include $container->getService('system.particles')->getParticleTemplate($particle['particle']) options => empty($particle['options']) ?: (object) $particle['options'], id => $id}
+        {include $container->getService('system.theme')->getParticle($particle['particle']) options => empty($particle['options']) ?: (object) $particle['options'], id => $id}
     </div>
 {/define}

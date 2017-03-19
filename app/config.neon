@@ -44,7 +44,6 @@ system:
         dir: %contentDir%/themes
     pages:
         dir: %contentDir%/pages
-    particles: %appDir%/Webby/System/Particles
 
 parameters:
     contentDir: %appDir%/../content

@@ -7,7 +7,6 @@ use Nette\DI\CompilerExtension;
 use Webby\System\Assets;
 use Webby\System\Menus;
 use Webby\System\Pages;
-use Webby\System\Particles;
 use Webby\System\Theme;
 
 class System extends CompilerExtension
@@ -75,15 +74,6 @@ class System extends CompilerExtension
                 Menus::class,
                 [
                     $config["menus"]
-                ]
-            );
-
-        // Particles
-        $builder->addDefinition($this->prefix('particles'))
-            ->setClass(
-                Particles::class,
-                [
-                    $config["particles"]
                 ]
             );
     }

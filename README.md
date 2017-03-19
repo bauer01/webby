@@ -4,7 +4,6 @@
 
 ---
 ### Refactoring
-- all yml files to NEON - load all config at build time in Nette extension
 - media support
 - composer support for plugins
 - implement model access
@@ -14,15 +13,12 @@
 - HTTPs
 - 404
 - layout themes (Christmas, Summer events etc.)
-- sections templates for pages & layout
 - caching
 - translations
 - core plugins (menu etc.)
 - better error handling for end users
 - CLI commands via REST API (?)
 - E-shop - based on Unimapper adapters - interface for supported eshop functions - disabled/enabled by target platform - Moltin, Flexibee, Snipcart
-- support section etc. templates in themes
-- inherit themes
 - inherit structures & layouts
 - drafts - plugin in standalone dir?
 
