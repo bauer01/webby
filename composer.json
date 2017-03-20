@@ -39,8 +39,13 @@
 	"extra": {
 		"merge-plugin": {
 			"include": [
-				"content/extensions.json"
+				"content/extensions.json",
+				"content/themes.json"
 			]
+		},
+		"installer-types": ["webby-theme"],
+		"installer-paths": {
+			"content/themes/{$name}": ["type:webby-theme"]
 		}
 	},
 	"config": {
