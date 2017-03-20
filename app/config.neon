@@ -18,22 +18,10 @@ latte:
     macros:
         - Webby\Latte\Macros
 
-unimapper:
-    adapters:
-        Webby: @webbyAdapter
-    cache: false
-    convention:
-        entity: Webby\Model\Entity\*
-        repository: Webby\Model\Repository\*Repository
-
 services:
-    pageRepository: Webby\Model\Repository\PageRepository
-    themeRepository: Webby\Model\Repository\ThemeRepository
-    webbyAdapter: Webby\Model\Adapter(%contentDir%)
     router: Webby\Routing\Route::createRouter
 
 extensions:
-    unimapper: UniMapper\Nette\Extension
     system: Webby\Extensions\System
 
 system:
