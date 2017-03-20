@@ -21,24 +21,23 @@ class Theme
         $this->layout = $config["layout"];
         $this->dir = $config["dir"] . "/" . $this->current;
 
-        $config = $this->loadFile($this->dir . "/theme.neon");
-        if (!empty($config["parent"])) {
+        $this->config = $this->loadFile($this->dir . "/theme.neon");
+        if (!empty($this->config["parent"])) {
 
-            $this->parent = $config["parent"];
+            $this->parent = $this->config["parent"];
 
             if ($this->parent === $this->current) {
                 throw new InvalidArgumentException("Theme '" . $this->current . "' can not be parent for itself!");
             }
 
-            if (!is_file($parentConfig = $this->dir . "/../" . $this->parent . "/theme.neon")) {
+            if (!is_file($parentConfigPath = $this->dir . "/../" . $this->parent . "/theme.neon")) {
                 throw new InvalidArgumentException(
                     "Parent theme '" . $this->parent . "' defined in '" . $this->current . "' not found!"
                 );
             }
 
-            $this->config = array_merge_recursive($config, $this->loadFile($parentConfig));
+            $this->config = array_merge_recursive($this->config, $this->loadFile($parentConfigPath));
         }
-        $this->config = $config;
     }
 
     private function loadFile($path)
