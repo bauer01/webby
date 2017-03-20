@@ -25,7 +25,6 @@
 		"kriswallsmith/assetic": "^1.4",
 		"leafo/scssphp": "^0.6.6",
 		"ptachoire/cssembed": "^1.0",
-		"oyejorge/less.php": "^v1.7.0.0",
 		"symfony/console": "^3.2",
 		"composer/composer": "^1.4",
 		"wikimedia/composer-merge-plugin": "^1.3"

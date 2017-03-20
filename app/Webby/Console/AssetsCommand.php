@@ -7,7 +7,7 @@ use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
 use Assetic\AssetWriter;
 use Assetic\Filter\CssImportFilter;
-use Assetic\Filter\LessphpFilter;
+use Assetic\Filter\LessFilter;
 use Assetic\Filter\ScssphpFilter;
 use Nette\InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
@@ -107,7 +107,7 @@ class AssetsCommand extends Command
                         $filters[] = new CssImportFilter();
                         switch (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
                             case "less":
-                                $filters[] = new LessphpFilter();
+                                $filters[] = new LessFilter();
                                 break;
                             case "scss":
                                 $filters[] = new ScssphpFilter();
