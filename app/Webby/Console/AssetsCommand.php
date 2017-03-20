@@ -107,7 +107,7 @@ class AssetsCommand extends Command
                         $filters[] = new CssImportFilter();
                         switch (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
                             case "less":
-                                $filters[] = new LessFilter();
+                                $filters[] = new LessFilter("/usr/bin/node", ["/usr/lib/node_modules"]);
                                 break;
                             case "scss":
                                 $filters[] = new ScssphpFilter();
