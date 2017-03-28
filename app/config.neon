@@ -35,6 +35,3 @@ system:
 
 parameters:
     contentDir: %appDir%/../content
-
-includes:
-    - ../content/settings.neon
