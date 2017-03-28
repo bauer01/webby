@@ -17,26 +17,29 @@ class Theme
 
     public function __construct(array $config)
     {
-        $this->current = $config["current"];
-        $this->layout = $config["layout"];
-        $this->dir = $config["dir"] . "/" . $this->current;
+        if (!empty($config["current"])) {
 
-        $this->config = $this->loadFile($this->dir . "/theme.neon");
-        if (!empty($this->config["parent"])) {
+            $this->current = $config["current"];
+            $this->layout = $config["layout"];
+            $this->dir = $config["dir"] . "/" . $this->current;
 
-            $this->parent = $this->config["parent"];
+            $this->config = $this->loadFile($this->dir . "/theme.neon");
+            if (!empty($this->config["parent"])) {
 
-            if ($this->parent === $this->current) {
-                throw new InvalidArgumentException("Theme '" . $this->current . "' can not be parent for itself!");
+                $this->parent = $this->config["parent"];
+
+                if ($this->parent === $this->current) {
+                    throw new InvalidArgumentException("Theme '" . $this->current . "' can not be parent for itself!");
+                }
+
+                if (!is_file($parentConfigPath = $this->dir . "/../" . $this->parent . "/theme.neon")) {
+                    throw new InvalidArgumentException(
+                        "Parent theme '" . $this->parent . "' defined in '" . $this->current . "' not found!"
+                    );
+                }
+
+                $this->config = array_merge_recursive($this->config, $this->loadFile($parentConfigPath));
             }
-
-            if (!is_file($parentConfigPath = $this->dir . "/../" . $this->parent . "/theme.neon")) {
-                throw new InvalidArgumentException(
-                    "Parent theme '" . $this->parent . "' defined in '" . $this->current . "' not found!"
-                );
-            }
-
-            $this->config = array_merge_recursive($this->config, $this->loadFile($parentConfigPath));
         }
     }
 

@@ -43,6 +43,11 @@ class AssetsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (empty($this->theme->getCurrent())) {
+            $output->writeln("No theme set");
+            return;
+        }
+
         $output->writeln("Cleaning assets dir...");
         shell_exec("rm -rf " . WWW_DIR . "/assets");
 

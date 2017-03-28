@@ -10,12 +10,6 @@
 			"homepage": "https://bronislavsedlak.com"
 		}
 	],
-	"repositories": [
-		{
-			"type": "composer",
-			"url": "http://toran-proxy.bronislavsedlak.com/repo/private/"
-		}
-	],
 	"require": {
 		"php": "^7.1",
 		"nette/application": "^2.4",
@@ -29,6 +23,10 @@
 		"composer/composer": "^1.4",
 		"wikimedia/composer-merge-plugin": "^1.3",
 		"oomphinc/composer-installers-extender": "^1.1.1"
+	},
+	"require-dev": {
+		"codeception/codeception": "^2.2.10",
+		"nette/tester": "^1.7.1"
 	},
 	"autoload": {
 		"psr-4": {"Webby\\": "app/Webby"}
