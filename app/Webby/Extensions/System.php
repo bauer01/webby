@@ -4,6 +4,7 @@ namespace Webby\Extensions;
 
 
 use Nette\DI\CompilerExtension;
+use Webby\System\Particles;
 use Webby\System\Assets;
 use Webby\System\Menus;
 use Webby\System\Pages;
@@ -54,6 +55,10 @@ class System extends CompilerExtension
                     $config["pages"]
                 ]
             );
+
+        // Particles
+        $builder->addDefinition($this->prefix('particles'))
+            ->setClass(Particles::class);
 
         // Assets
         $builder->addDefinition($this->prefix('assets'))

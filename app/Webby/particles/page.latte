@@ -1,4 +1,3 @@
-
 {var $currentTheme = $container->getService('system.theme')->getCurrent()}
 {ifset $webby->page['theme'][$currentTheme]}
     {var $page = $container->getService('system.theme')->getPage($webby->page['theme'][$currentTheme])}

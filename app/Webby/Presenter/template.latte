@@ -1,39 +1,33 @@
-{ifset $id}
-    {var $id .= "-"}
-{else}
-    {var $id = ""}
-{/ifset}
-
-{foreach $sections as $key => $section}
-    {include #section, section => $section, structure => empty($section['structure']) ? [] : $container->getService('system.theme')->getStructure($section['structure']), id => $id . "section" . $key}
+{foreach $sections as $section}
+    {include #section, section => $section, structure => empty($section['structure']) ? [] : $container->getService('system.theme')->getStructure($section['structure'])}
 {/foreach}
 
 {define section}
     {container section, structure => $structure, element => empty($section['element']) ? [] : $section['element'], wrap => empty($section['wrap']) ? [] : $section['wrap']}
-        {foreach $section['rows'] as $key => $row}
-            {include #row, row => $row, structure => $structure, id => $id . "-row" . $key}
-        {/foreach}
+        {if !empty($section['rows'])}
+            {foreach $section['rows'] as $row}
+                {include #row, row => $row, structure => $structure}
+            {/foreach}
+        {/if}
     {/container}
 {/define}
 
 {define row}
     {container row, structure => $structure, element => empty($row['element']) ? [] : $row['element'], wrap => empty($row['wrap']) ? [] : $row['wrap']}
-        {foreach $row['columns'] as $key => $column}
-            {include #column, column => $column, structure => $structure, id => $id . "-column" . $key}
-        {/foreach}
+        {if !empty($row['columns'])}
+            {foreach $row['columns'] as $column}
+                {include #column, column => $column, structure => $structure}
+            {/foreach}
+        {/if}
     {/container}
 {/define}
 
 {define column}
     {container column, structure => $structure, element => empty($column['element']) ? [] : $column['element'], wrap => empty($column['wrap']) ? [] : $column['wrap']}
-        {foreach $column['particles'] as $key => $particle}
-            {include #particle, particle => $particle, structure => $structure, id => $id . "-particle" . $key . "-" . $particle['particle']}
-        {/foreach}
+        {if !empty($column['particles'])}
+            {foreach $column['particles'] as $p}
+               {particle $p['particle'] (expand) $p}
+            {/foreach}
+        {/if}
     {/container}
-{/define}
-
-{define particle}
-    <div n:attr="id => $id" n:class="empty($particle['class']) ? null : $particle['class']">
-        {include $container->getService('system.theme')->getParticle($particle['particle']) options => empty($particle['options']) ?: (object) $particle['options'], id => $id}
-    </div>
 {/define}

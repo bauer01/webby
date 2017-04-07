@@ -3,6 +3,9 @@
 namespace Webby\System;
 
 
+use Nette\Application\IRouter;
+use Nette\Http\Request;
+use Nette\Http\UrlScript;
 use Nette\Neon\Neon;
 use Webby\Presenter\DefaultPresenter;
 use Webby\Routing\Route;
@@ -17,8 +20,9 @@ class Pages
     private $title;
     private $title_delimiter;
     private $description;
+    private $router;
 
-    public function __construct(array $config)
+    public function __construct(array $config, Request $request, IRouter $router)
     {
         $this->dir = $config["dir"];
         $this->homepage = $config["homepage"];
@@ -27,6 +31,8 @@ class Pages
         $this->title = $config["title"];
         $this->title_delimiter = $config["title_delimiter"];
         $this->description = $config["description"];
+        $this->request = $request;
+        $this->router = $router;
     }
 
     /**
@@ -115,6 +121,23 @@ class Pages
             $config += self::loadPageConfig($dir, $config["extends"]);
         }
         return $config;
+    }
+
+    public function link($link, array $args = [])
+    {
+        if ($link === $this->getHomepage()) {
+            return $this->request->getUrl()->getBaseUrl();
+        }
+
+        $url = clone $this->request->getUrl();
+        $url->setQuery($args);
+        return $this->router->constructUrl(Route::createRequest($this->request, $link), $url);
+    }
+
+    public function linkToRequest($link, array $parameters = [])
+    {
+        $urlScript = new UrlScript($this->link($link, $parameters));
+        return $this->router->match(new Request($urlScript));
     }
 
 }

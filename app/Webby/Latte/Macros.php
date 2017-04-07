@@ -3,7 +3,10 @@
 namespace Webby\Latte;
 
 use Latte\Compiler;
+use Latte\MacroNode;
+use Latte\Macros\CoreMacros;
 use Latte\Macros\MacroSet;
+use Latte\PhpWriter;
 
 class Macros extends MacroSet
 {
@@ -26,6 +29,21 @@ class Macros extends MacroSet
 
         // {link link:to:page param1 => value, param2 => value}
         $macroSet->addMacro('link', $macroLink);
+
+        // {particle system:name id => value}
+        $macroSet->addMacro('particle', [$macroSet, 'macroParticle']);
+    }
+
+    public static function macroParticle(MacroNode $node, PhpWriter $writer)
+    {
+        return $writer->write(
+            '
+                $args = %node.array;
+                ?><div id="<?php echo $container->getService(\'system.particles\')->add($args); ?>"<?php if (!empty($args[\'class\'])) : ?> class="<?php echo $args[\'class\']; endif; ?>">
+                <?php $this->createTemplate($container->getService(\'system.particles\')->getTemplatePath(%node.word), $args + $this->params, "include")->render();            
+                ?></div><?php
+            '
+        );
     }
 
     private static function mergeStructureWithElement($type, array $args)

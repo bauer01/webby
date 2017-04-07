@@ -97,32 +97,6 @@ class Theme
         return $this->loadResource("structures", $name);
     }
 
-    public function getParticle($name)
-    {
-        $parts = explode(':', $name, 2);
-        if (count($parts) <> 2) {
-            throw new InvalidArgumentException("Invalid particle definition '" . $name . "'!");
-        }
-
-        $path = "/particles/" . $parts[1] . ".latte";
-        switch ($parts[0]) {
-            case "system":
-                $dir = __DIR__ . "/..";
-                break;
-            case "theme":
-
-                $dir = $this->dir;
-                if ($this->parent && !is_file($this->dir . $path)) {
-                     $dir .= "/../" . $this->parent;
-                }
-                break;
-            default:
-                throw new InvalidArgumentException("Unexpected particle type in '" . $name . "'!");
-        }
-
-        return $dir . $path;
-    }
-
     /**
      * @return array|mixed
      */
