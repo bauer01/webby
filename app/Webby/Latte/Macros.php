@@ -38,7 +38,7 @@ class Macros extends MacroSet
     {
         return $writer->write(
             '
-                $args = %node.array;
+                $args = %node.array + [\'particle\' => %node.word];
                 ?><div id="<?php echo $container->getService(\'system.particles\')->add($args); ?>"<?php if (!empty($args[\'class\'])) : ?> class="<?php echo $args[\'class\']; endif; ?>">
                 <?php $this->createTemplate($container->getService(\'system.particles\')->getTemplatePath(%node.word), $args + $this->params, "include")->render();            
                 ?></div><?php
