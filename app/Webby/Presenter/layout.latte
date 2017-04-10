@@ -5,7 +5,7 @@
 <head>
     <title>
         {if $webby->link !== $pages->getHomepage()}
-            {$webby->page['title'] . " " . $pages->getTitleDelimiter() . " "}
+            {$webby->title . " " . $pages->getTitleDelimiter() . " "}
         {/if}
         {$pages->getTitle()}
     </title>

@@ -87,11 +87,11 @@ class Theme
         return $this->loadResource("layouts", $this->layout);
     }
 
-    public function getPage($name)
-    {
-        return $this->loadResource("pages", $name);
-    }
 
+    public function getTemplate($name)
+    {
+        return $this->loadResource("templates", $name);
+    }
     public function getStructure($name)
     {
         return $this->loadResource("structures", $name);

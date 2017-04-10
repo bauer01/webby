@@ -16,6 +16,7 @@ use Nette\Utils\Random;
 use Webby\Exception\RedirectException;
 use Webby\System\Particles;
 use Webby\System\Pages;
+use Webby\System\Theme;
 
 class DefaultPresenter implements IPresenter
 {
@@ -29,13 +30,15 @@ class DefaultPresenter implements IPresenter
     private $container;
     private $pages;
     private $particles;
+    private $theme;
 
-    public function __construct(Container $container, Pages $pages, Particles $particles, ILatteFactory $latteFactory, IRouter $router, Session $session)
+    public function __construct(Container $container, Pages $pages, Particles $particles, Theme $theme, ILatteFactory $latteFactory, IRouter $router, Session $session)
     {
         $this->container = $container;
         $this->latte = $latteFactory->create();
         $this->router = $router;
         $this->session = $session->getSection("webby");
+        $this->theme = $theme;
         $this->pages = $pages;
         $this->particles = $particles;
     }
@@ -118,7 +121,9 @@ class DefaultPresenter implements IPresenter
 
     private function getTemplateParameters($link, array $pageConfig)
     {
+        $theme = isset($pageConfig["theme"][$this->theme->getCurrent()]) ? $pageConfig["theme"][$this->theme->getCurrent()] : [];
         $url = $this->request->getParameter("url");
+
         return [
             "presenter" => $this,
             "container" => $this->container,
@@ -126,7 +131,9 @@ class DefaultPresenter implements IPresenter
             "basePath" => rtrim($url->getBasePath(), '/'),
             "webby" => (object) [
                 "link" => $link,
-                "page" => $pageConfig,
+                "title" => $pageConfig["title"],
+                "content" => isset($theme["content"]) ? $theme["content"] : [],
+                "template" => isset($theme["template"]) ? $this->theme->getTemplate($theme["template"]) : [],
                 "templateDir" => __DIR__
             ]
         ];
@@ -147,11 +154,11 @@ class DefaultPresenter implements IPresenter
 
     public function error($message = null, $httpCode = \Nette\Http\IResponse::S404_NOT_FOUND)
     {
-        throw new BadRequestException((string) $message, (int) $httpCode);
+        throw new BadRequestException((string)$message, (int)$httpCode);
     }
 
     public function isAjax()
     {
-        return (bool) $this->request->getParameter("ajax");
+        return (bool)$this->request->getParameter("ajax");
     }
 }
