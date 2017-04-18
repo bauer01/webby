@@ -4,7 +4,6 @@ namespace Webby\Latte;
 
 use Latte\Compiler;
 use Latte\MacroNode;
-use Latte\Macros\CoreMacros;
 use Latte\Macros\MacroSet;
 use Latte\PhpWriter;
 

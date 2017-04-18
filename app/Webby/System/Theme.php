@@ -43,6 +43,11 @@ class Theme
         }
     }
 
+    public function getColor()
+    {
+        return empty($this->config["color"]) ? false : $this->config["color"];
+    }
+
     private function loadFile($path)
     {
         return Neon::decode(file_get_contents($path));
