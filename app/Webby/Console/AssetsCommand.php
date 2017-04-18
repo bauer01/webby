@@ -104,7 +104,12 @@ class AssetsCommand extends Command
             if (!empty($assets["local"])) {
                 foreach ($assets["local"] as $path) {
 
-                    $path = $this->theme->getDir() . "/" . $path;
+                    $filePath = $this->theme->getDir() . "/" . $path;
+                    if (!is_file($filePath)) {
+                        // Try to load parent
+                        $filePath = $this->theme->getDir() . "/../" . $this->theme->getParent() . "/" . $path;
+                    }
+
                     $filters = [];
 
                     if ($type === "css") {
@@ -120,7 +125,7 @@ class AssetsCommand extends Command
                         }
                     }
 
-                    $this->{$type}->add(new FileAsset($path, $filters));
+                    $this->{$type}->add(new FileAsset($filePath, $filters));
                 }
             }
         }
