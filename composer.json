@@ -2,7 +2,7 @@
 	"name": "webby/webby",
 	"type": "project",
 	"description": "A lightweight flat-file CMS written based on Nette framework",
-	"keywords": ["cms","flat-file cms","flat cms","flatfile cms","php","nette"],
+	"keywords": ["cms","flat-file","flat","flatfile","php","nette"],
 	"license": "proprietary",
 	"authors": [
 		{
@@ -12,6 +12,7 @@
 	],
 	"require": {
 		"php": "^7.1",
+		"chrisjean/php-ico": "^1.0.4",
 		"nette/application": "^2.4",
 		"nette/bootstrap": "^2.4",
 		"latte/latte": "^2.4",

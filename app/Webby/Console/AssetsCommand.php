@@ -56,6 +56,9 @@ class AssetsCommand extends Command
 
         $output->writeln("Dumping media files...");
         $this->dumpMedia();
+
+        $output->writeln("Dumping favicon...");
+        $this->dumpFavicon();
     }
 
     private function dumpCssJs()
@@ -69,6 +72,27 @@ class AssetsCommand extends Command
 
         $writer = new AssetWriter(WWW_DIR . "/assets");
         $writer->writeManagerAssets($assetManager);
+    }
+
+    private function dumpFavicon()
+    {
+        if (!empty($favicon = $this->theme->getConfig()["favicon"])) {
+
+            if (!is_dir($outputPath = WWW_DIR . "/assets/media/theme/favicon")) {
+                mkdir($outputPath, 0775, true);
+            }
+
+            $ico_lib = new \PHP_ICO(
+                $this->theme->getDir() . "/" . $favicon,
+                [
+                    [16, 16],
+                    [24, 24],
+                    [32, 32],
+                    [48, 48]
+                ]
+            );
+            $ico_lib->save_ico($outputPath . "/favicon.ico");
+        }
     }
 
     private function dumpMedia()
