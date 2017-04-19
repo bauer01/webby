@@ -4,11 +4,12 @@
 
 ---
 ### Refactoring
-- media support
+- media support in templates
 - composer support for plugins
 - implement model access
 - moltin - use own pages
 - packages - https://getcomposer.org/doc/05-repositories.md#path
+- favicon - generate complex sizes
 ---
 ### Features
 - HTTPs

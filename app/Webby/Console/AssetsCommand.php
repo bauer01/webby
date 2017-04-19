@@ -78,17 +78,14 @@ class AssetsCommand extends Command
     {
         if (!empty($favicon = $this->theme->getConfig()["favicon"])) {
 
-            if (!is_dir($outputPath = WWW_DIR . "/assets/media/theme/favicon")) {
+            if (!is_dir($outputPath = WWW_DIR . "/assets/theme/favicon")) {
                 mkdir($outputPath, 0775, true);
             }
 
             $ico_lib = new \PHP_ICO(
                 $this->theme->getDir() . "/" . $favicon,
                 [
-                    [16, 16],
-                    [24, 24],
-                    [32, 32],
-                    [48, 48]
+                    [16, 16]
                 ]
             );
             $ico_lib->save_ico($outputPath . "/favicon.ico");
@@ -99,7 +96,7 @@ class AssetsCommand extends Command
     {
         if (!empty($media = $this->theme->getConfig()["media"])) {
 
-            if (!is_dir($outputPath = WWW_DIR . "/assets/media/theme")) {
+            if (!is_dir($outputPath = WWW_DIR . "/assets/theme/media")) {
                 mkdir($outputPath, 0775, true);
             }
 
