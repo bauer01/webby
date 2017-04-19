@@ -1,24 +1,24 @@
-FROM php:7.1
+FROM php:7.1-apache
+
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
 RUN apt-get update \
- && apt-get install -y git zlib1g-dev \
+ && apt-get install -y git zlib1g-dev nodejs \
+ 		libjpeg62-turbo-dev \
+ 		libpng12-dev \
  && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install zip
+RUN docker-php-ext-install opcache zip gd
 
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
-  apt-get install -y nodejs
+RUN a2enmod rewrite
 
 RUN npm install -g less
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY . /usr/src/app
-WORKDIR /usr/src/app
-
+WORKDIR /var/www/
+RUN rm -rf *
+COPY ./ ./
 RUN composer update
 RUN chmod +x bin/system
-RUN php bin/system install
-
-ENTRYPOINT ["php", "vendor/bin/tester"]
-CMD ["tests/unit", "-p", "php"]
+RUN chown -R www-data:www-data log temp html
