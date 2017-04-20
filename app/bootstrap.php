@@ -31,8 +31,15 @@ $configurator->enableTracy($appDir . '/log');
 $configurator->setTempDirectory($appDir . '/temp');
 $configurator->addConfig(__DIR__ . '/config.neon');
 
+// Load user global settings
 $settingsFile = __DIR__ . "/../content/settings.neon";
 if (is_file($settingsFile)) {
     $configurator->addConfig($settingsFile);
 }
+
+// Load user environment settings
+if ($env = getenv("WEBBY_ENV")) {
+    $configurator->addConfig(__DIR__ . "/../content/environments/" . $env . ".neon");
+}
+
 return $configurator->createContainer();
