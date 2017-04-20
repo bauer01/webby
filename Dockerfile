@@ -1,5 +1,7 @@
 FROM php:7.1-apache
 
+ENV WEBBY_DEBUG 0
+
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
 
 RUN apt-get update \

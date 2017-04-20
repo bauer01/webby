@@ -24,7 +24,7 @@ $appDir = __DIR__ . "/..";
 $configurator = new Nette\Configurator;
 
 // Enable Tracy for error visualisation & logging
-$configurator->setDebugMode(true);
+$configurator->setDebugMode((bool) getenv("WEBBY_DEBUG"));
 $configurator->enableTracy($appDir . '/log');
 
 // Create Dependency Injection container
