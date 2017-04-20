@@ -22,11 +22,11 @@ class InstallCommand extends Command
         $assets = $this->getApplication()->find('assets:dump');
         $assets->run(new ArrayInput(['command' => 'assets:dump']), $output);
 
-        $sitemap = $this->getApplication()->find('sitemap');
-        $sitemap->run(new ArrayInput(['command' => 'sitemap']), $output);
-
         $robots = $this->getApplication()->find('robots');
         $robots->run(new ArrayInput(['command' => 'robots']), $output);
+
+        $sitemap = $this->getApplication()->find('sitemap');
+        $sitemap->run(new ArrayInput(['command' => 'sitemap']), $output);
     }
 
 }

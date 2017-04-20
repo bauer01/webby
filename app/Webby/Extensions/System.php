@@ -4,6 +4,9 @@ namespace Webby\Extensions;
 
 
 use Nette\DI\CompilerExtension;
+use Nette\DI\Statement;
+use Nette\Http\Request;
+use Nette\Http\UrlScript;
 use Webby\System\Particles;
 use Webby\System\Assets;
 use Webby\System\Menus;
@@ -16,6 +19,7 @@ class System extends CompilerExtension
 {
 
     private $defaults = [
+        "url" => null,
         "assets" => [
             "dir" => null,
             "mediaDir" => null
@@ -40,7 +44,9 @@ class System extends CompilerExtension
         ],
         "robots" => [
             "enabled" => true,
-            "disallow" => []
+            "sitemap" => true,
+            "disallow" => [],
+            "allow" => []
         ]
     ];
 
@@ -108,6 +114,12 @@ class System extends CompilerExtension
                     $config["robots"]
                 ]
             );
+
+        // CLI setup
+        if (PHP_SAPI === 'cli') {
+            $builder->getDefinition('http.request')
+                ->setClass(Request::class, [new Statement(UrlScript::class, [$config['url']])]);
+        }
     }
 
 }

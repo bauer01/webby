@@ -18,6 +18,11 @@ class Sitemap
         $this->pages = $pages;
     }
 
+    public function getFileName()
+    {
+        return 'sitemap.xml';
+    }
+
     /**
      * @return mixed
      */
@@ -28,10 +33,20 @@ class Sitemap
 
     public function dump()
     {
-        $sitemap = new \samdark\sitemap\Sitemap(__DIR__ . '/sitemap.xml');
-        foreach (Finder::findFiles('*.neon')->from($this->pages->getDir()) as $file) {
-            $sitemap->addItem($this->pages->link(Route::pathToLink($file->getBasename('.neon'))));
+        $sitemap = new \samdark\sitemap\Sitemap(WWW_DIR . "/" . $this->getFileName());
+
+        $dir = realpath($this->pages->getDir());
+        foreach (Finder::findFiles('*.neon')->from($dir) as $file) {
+
+            $relativePath = ltrim($file->getPath() . "/" . $file->getBasename('.neon'), $dir);
+
+            $sitemap->addItem(
+                $this->pages->link(
+                    Route::pathToLink($relativePath)
+                )
+            );
         }
+
         $sitemap->write();
     }
 

@@ -11,7 +11,13 @@ $application->addCommands([
         $container->getByType(\Webby\System\Assets::class)
     ),
     new \Webby\Console\InstallCommand(),
-    new \Webby\Console\PackageCommand()
+    new \Webby\Console\PackageCommand(),
+    new \Webby\Console\RobotsCommand(
+        $container->getByType(\Webby\System\Robots::class)
+    ),
+    new \Webby\Console\SitemapCommand(
+        $container->getByType(\Webby\System\Sitemap::class)
+    )
 ]);
 
 $application->setCatchExceptions(false);

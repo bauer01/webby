@@ -27,10 +27,10 @@ class SitemapCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->robots->isEnabled()) {
+        if ($this->sitemap->isEnabled()) {
 
             $output->writeln("Dumping sitemap...");
-            $this->robots->dump();
+            $this->sitemap->dump();
         } else {
             $output->writeln("Sitemap disabled - skipped...");
         }

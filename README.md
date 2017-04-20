@@ -10,6 +10,7 @@
 - moltin - use own pages
 - packages - https://getcomposer.org/doc/05-repositories.md#path
 - favicon - generate complex sizes
+- CLI extensions
 ---
 ### Features
 - HTTPs
