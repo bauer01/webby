@@ -8,6 +8,8 @@ use Webby\System\Particles;
 use Webby\System\Assets;
 use Webby\System\Menus;
 use Webby\System\Pages;
+use Webby\System\Robots;
+use Webby\System\Sitemap;
 use Webby\System\Theme;
 
 class System extends CompilerExtension
@@ -32,7 +34,14 @@ class System extends CompilerExtension
             "description" => null
         ],
         "menus" => [],
-        "particles" => null
+        "particles" => null,
+        "sitemap" => [
+            "enabled" => true
+        ],
+        "robots" => [
+            "enabled" => true,
+            "disallow" => []
+        ]
     ];
 
     public function loadConfiguration()
@@ -79,6 +88,24 @@ class System extends CompilerExtension
                 Menus::class,
                 [
                     $config["menus"]
+                ]
+            );
+
+        // Sitemap
+        $builder->addDefinition($this->prefix('sitemap'))
+            ->setClass(
+                Sitemap::class,
+                [
+                    $config["sitemap"]
+                ]
+            );
+
+        // Robots
+        $builder->addDefinition($this->prefix('robots'))
+            ->setClass(
+                Robots::class,
+                [
+                    $config["robots"]
                 ]
             );
     }

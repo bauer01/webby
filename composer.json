@@ -13,6 +13,7 @@
 	"require": {
 		"php": "^7.1",
 		"chrisjean/php-ico": "^1.0.4",
+		"samdark/sitemap": "^2.0.7",
 		"nette/application": "^2.4",
 		"nette/bootstrap": "^2.4",
 		"latte/latte": "^2.4",
