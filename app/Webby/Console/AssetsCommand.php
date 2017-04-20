@@ -76,14 +76,14 @@ class AssetsCommand extends Command
 
     private function dumpFavicon()
     {
-        if (!empty($favicon = $this->theme->getConfig()["favicon"])) {
+        if (!empty($this->theme->getConfig()["favicon"])) {
 
             if (!is_dir($outputPath = WWW_DIR . "/assets/theme/favicon")) {
                 mkdir($outputPath, 0775, true);
             }
 
             $ico_lib = new \PHP_ICO(
-                $this->theme->getDir() . "/" . $favicon,
+                $this->theme->getDir() . "/" . $this->theme->getConfig()["favicon"],
                 [
                     [16, 16]
                 ]
