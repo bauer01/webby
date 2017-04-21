@@ -1,5 +1,7 @@
 vendor
 html/assets
+html/robots.txt
+html/sitemap.xml
 temp/*
 log/*
 content/*
