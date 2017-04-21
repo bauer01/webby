@@ -10,6 +10,7 @@ use Assetic\Filter\CssImportFilter;
 use Assetic\Filter\LessFilter;
 use Assetic\Filter\ScssphpFilter;
 use Nette\InvalidArgumentException;
+use Nette\Utils\Finder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -105,8 +106,39 @@ class AssetsCommand extends Command
                 if (!is_dir($sourcePath = $this->theme->getDir() . "/" . $relativePath)) {
                     throw new InvalidArgumentException("Can not dump missing dir " . $sourcePath);
                 }
-                shell_exec("cp -R " . $sourcePath . "/* " . $outputPath);
+
+                foreach (Finder::findFiles("*")->in($sourcePath) as $file) {
+                    $this->copyAndCompress($file->getPathname(), $outputPath . "/" . $file->getFilename());
+                }
             }
+        }
+    }
+
+    private function copyAndCompress($src, $dest, $quality = 75)
+    {
+        $info = getimagesize($src);
+
+        if ($info['mime'] == 'image/jpeg') {
+
+            $image = imagecreatefromjpeg($src);
+            //save file
+            imagejpeg($image, $dest, $quality);//ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default is the default IJG quality value (about 75).
+            //Free up memory
+            imagedestroy($image);
+        } elseif ($info['mime'] == 'image/png') {
+
+            $image = imagecreatefrompng($src);
+
+            imageAlphaBlending($image, true);
+            imageSaveAlpha($image, true);
+
+            /* chang to png qulity */
+            $png_quality = 9 - (($quality * 9 ) / 100 );
+            imagePng($image, $dest, $png_quality);//Compression level: from 0 (no compression) to 9.
+            //Free up memory
+            imagedestroy($image);
+        } else {
+            copy($src, $dest);
         }
     }
 

@@ -10,6 +10,7 @@ RUN apt-get update \
  		libpng12-dev \
  && rm -rf /var/lib/apt/lists/*
 
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include
 RUN docker-php-ext-install opcache zip gd
 
 RUN a2enmod rewrite
