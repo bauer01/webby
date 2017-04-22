@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+
+rm -rf temp/cache
+php bin/system install
+rm -rf temp/cache
+
+exec "$@"

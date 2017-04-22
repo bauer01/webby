@@ -21,7 +21,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 WORKDIR /var/www/
 RUN rm -rf *
-COPY ./ ./
-RUN composer update
+COPY . .
+RUN composer install
 RUN chmod +x bin/system
 RUN chown -R www-data:www-data log temp html
+
+COPY docker-webby-run /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-webby-run
+ENTRYPOINT ["docker-webby-run"]
+CMD ["apache2-foreground"]
