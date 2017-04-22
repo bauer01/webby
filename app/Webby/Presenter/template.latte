@@ -1,6 +1,8 @@
+{if $sections}
 {foreach $sections as $section}
     {include #section, section => $section, structure => empty($section['structure']) ? [] : $container->getService('system.theme')->getStructure($section['structure'])}
 {/foreach}
+{/if}
 
 {define section}
     {container section, structure => $structure, element => empty($section['element']) ? [] : $section['element'], wrap => empty($section['wrap']) ? [] : $section['wrap']}
