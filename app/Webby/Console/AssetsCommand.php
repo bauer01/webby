@@ -148,14 +148,14 @@ class AssetsCommand extends Command
 
             // CDN
             if (!empty($assets["cdn"])) {
-                foreach ($assets["cdn"] as $url) {
+                foreach (array_reverse($assets["cdn"]) as $url) {
                     $this->{$type}->add(new HttpAsset($url));
                 }
             }
 
             // Local
             if (!empty($assets["local"])) {
-                foreach ($assets["local"] as $path) {
+                foreach (array_reverse($assets["local"]) as $path) {
 
                     $filePath = $this->theme->getDir() . "/" . $path;
                     if (!is_file($filePath)) {
