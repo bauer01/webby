@@ -40,10 +40,8 @@ class Route implements IRouter
             "Default",
             $httpRequest->getMethod(),
             [
-                "ajax" => $httpRequest->isAjax(),
                 "link" => $link,
-                "parameters" => $httpRequest->getQuery(),
-                "url" => $httpRequest->getUrl()
+                "parameters" => $httpRequest->getQuery()
             ] + $config,
             $httpRequest->getPost(),
             $httpRequest->getFiles(),

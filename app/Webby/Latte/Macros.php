@@ -21,7 +21,7 @@ class Macros extends MacroSet
             static::class . '::renderMacroContainerEnd(%node.word, %node.array)'
         );
 
-        $macroLink = 'echo $presenter->link(%node.word, %node.array);';
+        $macroLink = 'echo $container->getService(\'system.pages\')->link(%node.word, %node.array);';
 
         // n:href="link:to:page param1 => value, param2 => value"
         $macroSet->addMacro('href', null, null, ' ?> href="<?php ' . $macroLink . ' ?>"<?php ');

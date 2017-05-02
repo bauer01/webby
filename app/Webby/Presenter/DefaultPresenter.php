@@ -4,43 +4,27 @@ namespace Webby\Presenter;
 
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
-use Nette\Application\IRouter;
 use Nette\Application\Request;
-use Nette\Application\Responses\JsonResponse;
-use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
-use Nette\Bridges\ApplicationLatte\ILatteFactory;
 use Nette\DI\Container;
 use Nette\Http\Session;
 use Nette\Utils\Random;
 use Webby\Exception\RedirectException;
-use Webby\System\Particles;
 use Webby\System\Pages;
-use Webby\System\Theme;
+use Webby\System\Particles;
 
 class DefaultPresenter implements IPresenter
 {
 
-    private $latte;
-    private $router;
     /** @var Request */
-    private $request;
+    private $appRequest;
     private $session;
     private $storedLink;
     private $container;
-    private $pages;
-    private $particles;
-    private $theme;
 
-    public function __construct(Container $container, Pages $pages, Particles $particles, Theme $theme, ILatteFactory $latteFactory, IRouter $router, Session $session)
+    public function __construct(Container $container, Session $session)
     {
         $this->container = $container;
-        $this->latte = $latteFactory->create();
-        $this->router = $router;
         $this->session = $session->getSection("webby");
-        $this->theme = $theme;
-        $this->pages = $pages;
-        $this->particles = $particles;
     }
 
     public function storeLink($expiration = '+ 10 minutes')
@@ -54,8 +38,8 @@ class DefaultPresenter implements IPresenter
             $link = $this->storedLink = Random::generate(5);
         } while (isset($this->session[$this->storedLink]));
         $this->session[$link] = [
-            "link" => $this->request->getParameter("link"),
-            "parameters" => $this->request->getParameter("parameters")
+            "link" => $this->appRequest->getParameter("link"),
+            "parameters" => $this->appRequest->getParameter("parameters")
         ];
         $this->session->setExpiration($expiration, $link);
         return $link;
@@ -71,80 +55,16 @@ class DefaultPresenter implements IPresenter
         $this->redirect($link["link"], $link["parameters"]);
     }
 
-    public function link($link, $args = [])
-    {
-        return $this->pages->link($link, $args); // @todo move to pages?
-    }
-
     public function run(Request $appRequest)
     {
-        $this->request = $appRequest;
+        $this->appRequest = $appRequest;
 
         return call_user_func(
-            $this->request->getParameter("callback"),
+            $appRequest->getParameter("callback"),
             $this,
-            $this->request->getParameter("link")
+            $this->container->getByType(Pages::class),
+            $appRequest->getParameter("link")
         );
-    }
-
-    public function createPageResponse($link, array $pageConfig)
-    {
-        try {
-
-            $response = $this->latte->renderToString(
-                __DIR__ . "/layout.latte",
-                $templateParameters = $this->getTemplateParameters($link, $pageConfig)
-            );
-        } catch (RedirectException $e) {
-            return $this->createRedirectResponse($e->getLink(), $e->getParameters());
-        }
-
-        if ($this->isAjax()) {
-
-            $response = [];
-            foreach ($this->particles->getAdded() as $id => $particle) {
-
-                $response[$id] = $this->latte->renderToString(
-                    $this->particles->getTemplatePath($particle["particle"]),
-                    $templateParameters + $particle
-                );
-            }
-            return new JsonResponse($response);
-        }
-        return new TextResponse($response);
-    }
-
-    public function createRedirectResponse($link, array $parameters = [])
-    {
-        return new RedirectResponse($this->pages->link($link, $parameters));
-    }
-
-    private function getTemplateParameters($link, array $pageConfig)
-    {
-        $theme = isset($pageConfig["theme"][$this->theme->getCurrent()]) ? $pageConfig["theme"][$this->theme->getCurrent()] : [];
-        $url = $this->request->getParameter("url");
-
-        return [
-            "presenter" => $this,
-            "container" => $this->container,
-            "baseUrl" => rtrim($url->getBaseUrl(), '/'),
-            "basePath" => rtrim($url->getBasePath(), '/'),
-            "webby" => (object) [
-                "link" => $link,
-                "title" => $pageConfig["title"],
-                "content" => isset($theme["content"]) ? $theme["content"] : [],
-                "template" => isset($theme["template"]) ? $this->theme->getTemplate($theme["template"]) : [],
-                "templateDir" => __DIR__
-            ]
-        ];
-    }
-
-    /**
-     * @return Particles
-     */
-    public function getParticles()
-    {
-        return $this->particles;
     }
 
     public function redirect($link, array $parameters = [], $code = \Nette\Http\IResponse::S302_FOUND)
@@ -154,11 +74,17 @@ class DefaultPresenter implements IPresenter
 
     public function error($message = null, $httpCode = \Nette\Http\IResponse::S404_NOT_FOUND)
     {
-        throw new BadRequestException((string)$message, (int)$httpCode);
+        throw new BadRequestException((string) $message, (int) $httpCode);
     }
 
     public function isAjax()
     {
-        return (bool)$this->request->getParameter("ajax");
+        return $this->container->getByType(\Nette\Http\Request::class)->isAjax();
     }
+
+    public function invalidate($particle)
+    {
+        return $this->container->getByType(Particles::class)->invalidate($particle);
+    }
+
 }
