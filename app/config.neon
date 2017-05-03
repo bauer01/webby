@@ -6,6 +6,7 @@ application:
 
 session:
     debugger: true
+    autoStart: true
 
 latte:
     macros:
