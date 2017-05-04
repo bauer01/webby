@@ -31,9 +31,13 @@ class Particles
         return $this->added;
     }
 
-    public function invalidate($particle)
+    public function invalidate($particles)
     {
-        $this->invalidated[] = $particle;
+        if (is_array($particles)) {
+            $this->invalidated = array_unique(array_merge($this->invalidated, $particles));
+        } else {
+            $this->invalidated[] = $particles;
+        }
     }
 
     public function add(array $config)

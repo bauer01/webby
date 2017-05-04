@@ -186,10 +186,13 @@ class Pages
             $response = [];
             foreach ($this->particles->getAdded() as $id => $particle) {
 
-                $response[$id] = $latte->renderToString(
-                    $this->particles->getTemplatePath($particle["particle"]),
-                    $templateParameters + $particle
-                );
+                if (in_array($particle["particle"], $this->particles->getInvalidated())) {
+
+                    $response[$id] = $latte->renderToString(
+                        $this->particles->getTemplatePath($particle["particle"]),
+                        $templateParameters + $particle
+                    );
+                }
             }
             return new JsonResponse($response);
         }
