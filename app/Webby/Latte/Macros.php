@@ -6,6 +6,7 @@ use Latte\Compiler;
 use Latte\MacroNode;
 use Latte\Macros\MacroSet;
 use Latte\PhpWriter;
+use Nette\Bridges\FormsLatte\FormMacros;
 
 class Macros extends MacroSet
 {
@@ -13,6 +14,8 @@ class Macros extends MacroSet
     public static function install(Compiler $compiler)
     {
         $macroSet = new static($compiler);
+
+        FormMacros::install($compiler);
 
         // {container structure => [ .. ], wrap => [ .. ], size => ..}
         $macroSet->addMacro(
