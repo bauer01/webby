@@ -35,7 +35,9 @@ class System extends CompilerExtension
             "charset" => "utf-8",
             "title" => null,
             "title_delimiter" => "-",
-            "description" => null
+            "description" => null,
+            "head" => [],
+            "body" => []
         ],
         "menus" => [],
         "particles" => null,

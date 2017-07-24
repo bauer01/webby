@@ -34,6 +34,8 @@ class Pages
     private $container;
     private $errorPage;
     private $httpRequest;
+    private $body;
+    private $head;
 
     public function __construct(array $config, Container $container)
     {
@@ -45,6 +47,8 @@ class Pages
         $this->title = $config["title"];
         $this->title_delimiter = $config["title_delimiter"];
         $this->description = $config["description"];
+        $this->body = $config["body"];
+        $this->head = $config["head"];
 
         $this->particles = $container->getByType(Particles::class);
         $this->httpRequest = $container->getByType(Request::class);
@@ -52,6 +56,22 @@ class Pages
         $this->theme = $container->getByType(Theme::class);
         $this->latteFactory = $container->getByType(ILatteFactory::class);
         $this->container = $container;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHead()
+    {
+        return $this->head;
     }
 
     /**

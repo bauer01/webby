@@ -29,9 +29,15 @@
 
     <link rel="shortcut icon" href="{$baseUrl}/assets/theme/favicon/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="{$baseUrl}/assets/styles.css">
+    {foreach $pages->getHead() as $head}
+        {$head|noescape}
+    {/foreach}
 </head>
 <body>
     {include content.latte, sections => $theme->getLayout()}
     <script src="{$baseUrl}/assets/scripts.js"></script>
+    {foreach $pages->getBody() as $body}
+        {$body|noescape}
+    {/foreach}
 </body>
 </html>
