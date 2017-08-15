@@ -20,8 +20,8 @@ class Macros extends MacroSet
         // {container structure => [ .. ], wrap => [ .. ], size => ..}
         $macroSet->addMacro(
             'container',
-            static::class . '::renderMacroContainerStart(%node.word, %node.array)',
-            static::class . '::renderMacroContainerEnd(%node.word, %node.array)'
+            static::class . '::renderElementStart(%node.word, %node.array)',
+            static::class . '::renderElementEnd(%node.word, %node.array)'
         );
 
         $macroLink = 'echo $container->getService(\'system.pages\')->link(%node.word, %node.array);';
@@ -41,9 +41,11 @@ class Macros extends MacroSet
         return $writer->write(
             '
                 $args = %node.array + [\'particle\' => %node.word];
-                ?><div id="<?php echo $container->getService(\'system.particles\')->add($args); ?>"<?php if (!empty($args[\'class\'])) : ?> class="<?php echo $args[\'class\']; endif; ?>">
-                <?php $this->createTemplate($container->getService(\'system.particles\')->getTemplatePath(%node.word), $args + $this->params, "include")->render();            
-                ?></div><?php
+                $args[\'id\'] = $container->getService(\'system.particles\')->add($args);
+                $args[\'element\'][\'tag\'] = \'div\';
+                ' . static::class . '::renderElementStart(%node.word, $args);
+                $this->createTemplate($container->getService(\'system.particles\')->getTemplatePath(%node.word), $args + $this->params, "include")->render();
+                ' . static::class . '::renderElementEnd(%node.word, $args);
             '
         );
     }
@@ -107,7 +109,7 @@ class Macros extends MacroSet
         return array_merge($wrapOuter, [$element], $wrapInner);
     }
 
-    public static function renderMacroContainerStart($type, array $args)
+    public static function renderElementStart($type, array $args)
     {
         foreach (self::mergeStructureWithElement($type, $args) as $options) {
 
@@ -117,6 +119,7 @@ class Macros extends MacroSet
 
                 // Attributes
                 if (!empty($options['attributes'])) {
+
                     foreach ($options['attributes'] as $attrName => $attrValue) {
                         echo " " . $attrName;
                         if ($attrValue !== null) {
@@ -168,7 +171,7 @@ class Macros extends MacroSet
         }
     }
 
-    public static function renderMacroContainerEnd($type, array $args)
+    public static function renderElementEnd($type, array $args)
     {
         foreach (self::mergeStructureWithElement($type, $args) as $options) {
 
