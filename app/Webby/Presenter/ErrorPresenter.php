@@ -24,15 +24,17 @@ class ErrorPresenter extends \NetteModule\ErrorPresenter
         $e = $appRequest->getParameter('exception');
         if ($e instanceof BadRequestException) {
 
-            $pageConfig = Pages::loadPageConfig($this->pages->getDir(), $this->pages->getErrorPage());
             $link = $appRequest->getParameter("link");
 
             $appRequest->setPresenterName("Default");
             $appRequest->setParameters($appRequest->getParameters() + [
-                "callback" => function (DefaultPresenter $presenter, Pages $pages) use ($pageConfig, $link) {
-                    return $pages->createPageResponse($presenter, $link, $pageConfig);
-                },
-                "pageConfig" => $pageConfig
+                "callback" => function (DefaultPresenter $presenter, Pages $pages) use ($link) {
+                    return $pages->createPageResponse(
+                        $presenter,
+                        $link,
+                        Pages::loadPageConfig($this->pages->getDir(), $this->pages->getErrorPage())
+                    );
+                }
             ]);
             return new ForwardResponse($appRequest);
         } else {

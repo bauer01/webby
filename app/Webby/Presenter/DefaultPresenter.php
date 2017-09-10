@@ -63,7 +63,8 @@ class DefaultPresenter implements IPresenter
             $appRequest->getParameter("callback"),
             $this,
             $this->container->getByType(Pages::class),
-            $appRequest->getParameter("link")
+            $appRequest->getParameter("link"),
+            $appRequest->getParameter("parameters")
         );
     }
 

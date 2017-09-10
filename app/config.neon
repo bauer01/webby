@@ -12,9 +12,6 @@ latte:
     macros:
         - Webby\Latte\Macros
 
-services:
-    router: Webby\Routing\Route::createRouter
-
 extensions:
     system: Webby\Extensions\System
 

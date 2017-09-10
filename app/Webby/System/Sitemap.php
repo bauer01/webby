@@ -3,19 +3,20 @@
 namespace Webby\System;
 
 
-use Nette\Utils\Finder;
-use Webby\Routing\Route;
-
 class Sitemap
 {
 
     private $enabled;
-    private $pages;
+    private $callbacks = [];
 
-    public function __construct(array $config, Pages $pages)
+    public function __construct(array $config)
     {
-        $this->enabled = $config["enabled"];
-        $this->pages = $pages;
+        $this->enabled = (bool) $config["enabled"];
+    }
+
+    public function registerCallback(callable $cb)
+    {
+        $this->callbacks[] = $cb;
     }
 
     public function getFileName()
@@ -34,23 +35,9 @@ class Sitemap
     public function dump()
     {
         $sitemap = new \samdark\sitemap\Sitemap(WWW_DIR . "/" . $this->getFileName());
-
-        $dir = realpath($this->pages->getDir());
-        if (!$dir) {
-            return false;
+        foreach ($this->callbacks as $cb) {
+            call_user_func($cb, $sitemap);
         }
-
-        foreach (Finder::findFiles('*.neon')->from($dir) as $file) {
-
-            $relativePath = ltrim($file->getPath() . "/" . $file->getBasename('.neon'), $dir);
-
-            $sitemap->addItem(
-                $this->pages->link(
-                    Route::pathToLink($relativePath)
-                )
-            );
-        }
-
         $sitemap->write();
     }
 

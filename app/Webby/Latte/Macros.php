@@ -7,6 +7,7 @@ use Latte\MacroNode;
 use Latte\Macros\MacroSet;
 use Latte\PhpWriter;
 use Nette\Bridges\FormsLatte\FormMacros;
+use Webby\System\LinkGenerator;
 
 class Macros extends MacroSet
 {
@@ -24,7 +25,7 @@ class Macros extends MacroSet
             static::class . '::renderElementEnd(%node.word, %node.array)'
         );
 
-        $macroLink = 'echo $container->getService(\'system.pages\')->link(%node.word, %node.array);';
+        $macroLink = 'echo $container->getByType(\'' . LinkGenerator::class . '\')->link(%node.word, %node.array);';
 
         // n:href="link:to:page param1 => value, param2 => value"
         $macroSet->addMacro('href', null, null, ' ?> href="<?php ' . $macroLink . ' ?>"<?php ');

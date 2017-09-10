@@ -6,16 +6,16 @@ namespace Webby\System;
 use Nette\Application\IPresenter;
 use Nette\Application\IRouter;
 use Nette\Application\Responses\JsonResponse;
-use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Nette\Bridges\ApplicationLatte\ILatteFactory;
 use Nette\DI\Container;
 use Nette\Http\Request;
+use Nette\Http\Url;
 use Nette\Http\UrlScript;
 use Nette\Neon\Neon;
+use Nette\Utils\Finder;
 use Webby\Exception\RedirectException;
-use Webby\Presenter\DefaultPresenter;
-use Webby\Routing\Route;
+use Webby\System\Pages\Route;
 
 class Pages
 {
@@ -27,7 +27,6 @@ class Pages
     private $title;
     private $title_delimiter;
     private $description;
-    private $router;
     private $theme;
     private $latteFactory;
     private $particles;
@@ -41,7 +40,7 @@ class Pages
     {
         $this->dir = $config["dir"];
         $this->homepage = $config["homepage"];
-        $this->errorPage = $config["error"];
+        $this->errorPage = (string) $config["error"];
         $this->language = $config["language"];
         $this->charset = $config["charset"];
         $this->title = $config["title"];
@@ -52,7 +51,6 @@ class Pages
 
         $this->particles = $container->getByType(Particles::class);
         $this->httpRequest = $container->getByType(Request::class);
-        $this->router = $container->getByType(IRouter::class);
         $this->theme = $container->getByType(Theme::class);
         $this->latteFactory = $container->getByType(ILatteFactory::class);
         $this->container = $container;
@@ -138,27 +136,6 @@ class Pages
         return $this->description;
     }
 
-    public static function createRoute(array $pagesConfig)
-    {
-        return new Route(function($link) use ($pagesConfig) {
-
-            if (!$link) {
-                $link = $pagesConfig["homepage"];
-            }
-
-            if (is_file($pagesConfig['dir'] . "/" . Route::linkToPath($link) . ".neon")) {
-                $pageConfig = self::loadPageConfig($pagesConfig["dir"], $link);
-                return [
-                    "callback" => function (DefaultPresenter $presenter, Pages $pages) use ($link, $pageConfig) {
-                        return $pages->createPageResponse($presenter, $link, $pageConfig);
-                    },
-                    "pageConfig" => $pageConfig
-                ];
-            }
-            return false;
-        });
-    }
-
     public static function loadPageConfig($dir, $link)
     {
         // @todo caching
@@ -170,24 +147,7 @@ class Pages
         return $config;
     }
 
-    public function link($link, array $args = [])
-    {
-        if ($link === $this->getHomepage()) {
-            return $this->httpRequest->getUrl()->getBaseUrl();
-        }
-
-        $url = clone $this->httpRequest->getUrl();
-        $url->setQuery($args);
-        return $this->router->constructUrl(Route::createRequest($this->httpRequest, $link), $url);
-    }
-
-    public function linkToRequest($link, array $parameters = [])
-    {
-        $urlScript = new UrlScript($this->link($link, $parameters));
-        return $this->router->match(new Request($urlScript));
-    }
-
-    public function createPageResponse(IPresenter $presenter, $link, array $pageConfig)
+    public function createPageResponse(IPresenter $presenter, $link, array $config)
     {
         $latte = $this->latteFactory->create();
 
@@ -195,7 +155,7 @@ class Pages
 
             $response = $latte->renderToString(
                 __DIR__ . "/Pages/layout.latte",
-                $templateParameters = $this->getTemplateParameters($presenter, $link, $pageConfig)
+                $templateParameters = $this->getTemplateParameters($presenter, $link, $config)
             );
         } catch (RedirectException $e) {
             return $this->createRedirectResponse($e->getLink(), $e->getParameters());
@@ -219,14 +179,9 @@ class Pages
         return new TextResponse($response);
     }
 
-    public function createRedirectResponse($link, array $parameters = [])
+    private function getTemplateParameters(IPresenter $presenter, $link, array $config)
     {
-        return new RedirectResponse($this->link($link, $parameters));
-    }
-
-    private function getTemplateParameters(IPresenter $presenter, $link, array $pageConfig)
-    {
-        $theme = isset($pageConfig["theme"][$this->theme->getCurrent()]) ? $pageConfig["theme"][$this->theme->getCurrent()] : [];
+        $theme = isset($config["theme"][$this->theme->getCurrent()]) ? $config["theme"][$this->theme->getCurrent()] : [];
         $url = $this->httpRequest->getUrl();
 
         return [
@@ -234,14 +189,38 @@ class Pages
             "container" => $this->container,
             "baseUrl" => rtrim($url->getBaseUrl(), '/'),
             "basePath" => rtrim($url->getBasePath(), '/'),
-            "webby" => (object) [
+            "webby" => (object)[
                 "link" => $link,
-                "title" => $pageConfig["title"],
+                "title" => $config["title"],
                 "content" => isset($theme["content"]) ? $theme["content"] : [],
                 "template" => isset($theme["template"]) ? $this->theme->getTemplate($theme["template"]) : [],
-                "templateDir" => __DIR__ . "/Pages"
+                "templateDir" => __DIR__ . "/Pages",
+                "parameters" => !empty($config["parameters"]) && is_array($config["parameters"]) ? $config["parameters"] : []
             ]
         ];
     }
 
+    public static function createSitemapCb(Pages $pages, LinkGenerator $linkGenerator, IRouter $router)
+    {
+        return function (\samdark\sitemap\Sitemap $sitemap) use ($pages, $linkGenerator, $router) {
+
+            $dir = realpath($pages->getDir());
+            if (!$dir) {
+                return;
+            }
+
+            foreach (Finder::findFiles('*.neon')->from($dir) as $file) {
+
+                $relativePath = ltrim($file->getPath() . "/" . $file->getBasename('.neon'), $dir);
+
+                $url = new Url();
+                $url->setPath($relativePath);
+                $httpRequest = new Request(new UrlScript($url));
+
+                if ($appRequest = $router->match($httpRequest)) {
+                    $sitemap->addItem($linkGenerator->link($appRequest->getParameter("link")));
+                }
+            }
+        };
+    }
 }
