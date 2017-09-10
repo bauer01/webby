@@ -36,6 +36,10 @@ class Sitemap
         $sitemap = new \samdark\sitemap\Sitemap(WWW_DIR . "/" . $this->getFileName());
 
         $dir = realpath($this->pages->getDir());
+        if (!$dir) {
+            return false;
+        }
+
         foreach (Finder::findFiles('*.neon')->from($dir) as $file) {
 
             $relativePath = ltrim($file->getPath() . "/" . $file->getBasename('.neon'), $dir);

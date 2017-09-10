@@ -26,3 +26,4 @@ system:
         dir: %appDir%/../content/themes
     pages:
         dir: %appDir%/../content/pages
+        error:

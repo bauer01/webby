@@ -12,6 +12,8 @@
 	],
 	"require": {
 		"php": "^7.1",
+		"ext-gd": "*",
+		"ext-zip": "*",
 		"chrisjean/php-ico": "^1.0.4",
 		"samdark/sitemap": "^2.0.7",
 		"nette/application": "^2.4",
@@ -25,21 +27,15 @@
 		"leafo/scssphp": "^0.6.6",
 		"ptachoire/cssembed": "^1.0",
 		"symfony/console": "^3.2",
-		"composer/composer": "^1.4",
 		"wikimedia/composer-merge-plugin": "^1.3",
 		"oomphinc/composer-installers-extender": "^1.1.1"
 	},
 	"require-dev": {
-		"codeception/codeception": "^2.2.10",
 		"nette/tester": "^1.7.1"
 	},
 	"autoload": {
 		"psr-4": {"Webby\\": "app/Webby"}
 	},
-	"scripts": {
-		"post-create-project-cmd": "bin/system install"
-	},
-	"minimum-stability": "dev",
 	"extra": {
 		"merge-plugin": {
 			"include": [
@@ -53,7 +49,6 @@
 		}
 	},
 	"config": {
-		"secure-http": false,
-		"preferred-install": "dist"
+		"secure-http": false
 	}
 }
