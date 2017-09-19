@@ -21,9 +21,16 @@ class LinkGenerator
 
     public function link($link, array $parameters = [])
     {
+        if ($fragmentPos = strpos($link, "#" )) {
+            $fragment = substr($link, $fragmentPos);
+            $link = substr($link, 0, $fragmentPos);
+ 		} else {
+            $fragment = '';
+        }
+
         $appRequest = Route::createRequest($this->httpRequest, $link, null);
         $appRequest->setParameters(array_merge_recursive($appRequest->getParameters(), ["parameters" => $parameters]));
-        return $this->router->constructUrl($appRequest, $this->httpRequest->getUrl());
+        return $this->router->constructUrl($appRequest, $this->httpRequest->getUrl()) . $fragment;
     }
 
 }
