@@ -29,7 +29,7 @@ class LinkGenerator
         }
 
         $appRequest = Route::createRequest($this->httpRequest, $link, null);
-        $appRequest->setParameters(array_merge_recursive($appRequest->getParameters(), ["parameters" => $parameters]));
+        $appRequest->setParameters(array_merge($appRequest->getParameters(), ["parameters" => $parameters]));
         return $this->router->constructUrl($appRequest, $this->httpRequest->getUrl()) . $fragment;
     }
 
