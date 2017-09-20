@@ -42,7 +42,7 @@ class Macros extends MacroSet
         return $writer->write(
             '
                 $args = %node.array + [\'particle\' => %node.word];
-                $args[\'id\'] = $container->getService(\'system.particles\')->add($args);
+                $args[\'element\'][\'id\'] = $container->getService(\'system.particles\')->add($args);
                 $args[\'element\'][\'tag\'] = \'div\';
                 ' . static::class . '::renderElementStart(%node.word, $args);
                 $this->createTemplate($container->getService(\'system.particles\')->getTemplatePath(%node.word), $args + $this->params, "include")->render();
@@ -65,6 +65,10 @@ class Macros extends MacroSet
             } else {
                 $element["class"] = $args["element"]["class"];
             }
+        }
+
+        if (!empty($args["element"]["id"])) {
+            $element["id"] = $args["element"]["id"];
         }
 
         if (!empty($args["element"]["tag"])) {
@@ -165,6 +169,11 @@ class Macros extends MacroSet
                         $style .= 'background-' . $key . ': ' . $value . ";";
                     }
                     echo ' style="' . $style . '"';
+                }
+
+                // ID
+                if (!empty($options["id"])) {
+                    echo ' id="'  . $options["id"] . '"';
                 }
 
                 echo ">";
