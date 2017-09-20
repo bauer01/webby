@@ -67,14 +67,12 @@ class Route implements IRouter
     {
         $link = $appRequest->getParameter("link");
 
-        if ($link === $this->pages->getHomepage()) {
-            return $refUrl->getBaseUrl();
-        }
-
         if (is_file($this->pages->getDir() . "/" . self::linkToPath($link) . ".neon")) {
 
-            $url = $refUrl->getHostUrl();
-            $url .= "/" . self::linkToPath($link);
+            $url = $refUrl->getBaseUrl();
+            if ($link !== $this->pages->getHomepage()) {
+                $url .= "/" . self::linkToPath($link);
+            }
             if (!empty($parameters = $appRequest->getParameter("parameters"))) {
                 $url .= "?" . http_build_query($parameters);
             }
