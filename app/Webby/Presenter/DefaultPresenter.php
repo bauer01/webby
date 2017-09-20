@@ -88,4 +88,12 @@ class DefaultPresenter implements IPresenter
         return $this->container->getByType(Particles::class)->invalidate($particle);
     }
 
+    /**
+     * @return Request
+     */
+    public function getAppRequest()
+    {
+        return $this->appRequest;
+    }
+
 }
