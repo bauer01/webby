@@ -47,8 +47,5 @@
 		"installer-paths": {
 			"content/themes/{$name}": ["type:webby-theme"]
 		}
-	},
-	"config": {
-		"secure-http": false
 	}
 }
