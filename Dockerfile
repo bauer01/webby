@@ -13,7 +13,7 @@ RUN apt-get update \
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include
 RUN docker-php-ext-install opcache zip gd
 
-RUN a2enmod rewrite
+RUN a2enmod rewrite expires headers
 
 RUN npm install -g less
 
