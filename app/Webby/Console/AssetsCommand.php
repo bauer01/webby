@@ -126,7 +126,15 @@ class AssetsCommand extends Command
             // CDN
             if (!empty($assets["cdn"])) {
                 foreach (array_reverse($assets["cdn"]) as $url) {
-                    $this->{$type}->add(new HttpAsset($url));
+
+                    $filters = [];
+                    if ($type === "css") {
+                        $filters[] = new CssMinFilter();
+                    } else if ($type === "js") {
+                        $filters[] = new JSMinFilter();
+                    }
+
+                    $this->{$type}->add(new HttpAsset($url, $filters));
                 }
             }
 
