@@ -71,7 +71,7 @@ class Route implements IRouter
 
             $url = $refUrl->getBaseUrl();
             if ($link !== $this->pages->getHomepage()) {
-                $url .= "/" . self::linkToPath($link);
+                $url .= self::linkToPath($link);
             }
             if (!empty($parameters = $appRequest->getParameter("parameters"))) {
                 $url .= "?" . http_build_query($parameters);
