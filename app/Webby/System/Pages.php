@@ -211,7 +211,7 @@ class Pages
 
             foreach (Finder::findFiles('*.neon')->from($dir) as $file) {
 
-                $relativePath = ltrim($file->getPath() . "/" . $file->getBasename('.neon'), $dir);
+                $relativePath = substr($file->getPath() . "/" . $file->getBasename('.neon'), strlen($dir) + 1);
 
                 $url = new Url();
                 $url->setPath($relativePath);
