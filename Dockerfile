@@ -15,14 +15,14 @@ RUN docker-php-ext-install opcache zip gd
 
 RUN a2enmod rewrite expires headers
 
-RUN npm install -g less
+RUN npm install -g less --no-progress
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/
 RUN rm -rf *
 COPY . .
-RUN composer install
+RUN composer install --no-progress
 RUN chmod +x bin/system
 RUN chown -R www-data:www-data log temp html
 
