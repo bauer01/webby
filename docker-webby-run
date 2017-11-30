@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+composer update --no-progress
 rm -rf temp/cache
 php bin/system install
 rm -rf temp/cache
