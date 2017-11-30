@@ -6,17 +6,11 @@ $container = require __DIR__ . '/../app/bootstrap.php';
 
 $application = new \Symfony\Component\Console\Application();
 $application->addCommands([
-    new \Webby\Console\System\AssetsCommand(
-        $container->getByType(\Webby\System\Theme::class),
-        $container->getByType(\Webby\System\Assets::class)
+    new \Webby\Console\Theme\Current\GetLayoutCommand(
+        $container->getByType(\Webby\System\Theme::class)
     ),
-    new \Webby\Console\System\InstallCommand(),
-    new \Webby\Console\System\PackageCommand(),
-    new \Webby\Console\System\RobotsCommand(
-        $container->getByType(\Webby\System\Robots::class)
-    ),
-    new \Webby\Console\System\SitemapCommand(
-        $container->getByType(\Webby\System\Sitemap::class)
+    new \Webby\Console\Theme\Current\GetLayoutsCommand(
+        $container->getByType(\Webby\System\Theme::class)
     )
 ]);
 

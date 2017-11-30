@@ -1,6 +1,6 @@
 <?php
 
-namespace Webby\Console;
+namespace Webby\Console\System;
 
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\HttpAsset;

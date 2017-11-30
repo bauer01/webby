@@ -1,6 +1,6 @@
 <?php
 
-namespace Webby\Console;
+namespace Webby\Console\System;
 
 use Composer\Command\RequireCommand;
 use Composer\Factory;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Webby\Console;
+namespace Webby\Console\System;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
