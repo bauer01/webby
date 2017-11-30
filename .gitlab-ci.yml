@@ -18,3 +18,4 @@ build:
     - tags
     - master
     - develop
+    - /^feature-.*$/
