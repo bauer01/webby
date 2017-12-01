@@ -10,6 +10,10 @@ $application->addCommands([
         $container->getByType(\Webby\System\Theme::class),
         $container->getByType(\Webby\System\Assets::class)
     ),
+    new \Webby\Console\System\BootstrapCommand(
+        __DIR__ . "/../bootstrap",
+        __DIR__ . "/../content"
+    ),
     new \Webby\Console\System\InstallCommand(),
     new \Webby\Console\System\PackageCommand(),
     new \Webby\Console\System\RobotsCommand(
@@ -17,6 +21,9 @@ $application->addCommands([
     ),
     new \Webby\Console\System\SitemapCommand(
         $container->getByType(\Webby\System\Sitemap::class)
+    ),
+    new \Webby\Console\System\Particles\GetAllCommand(
+        $container->getByType(\Webby\System\Particles::class)
     )
 ]);
 

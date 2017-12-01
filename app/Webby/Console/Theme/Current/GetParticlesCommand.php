@@ -3,13 +3,12 @@
 namespace Webby\Console\Theme\Current;
 
 
-use Nette\Utils\Finder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webby\System\Theme;
 
-class GetLayoutsCommand extends Command
+class GetParticlesCommand extends Command
 {
 
 
@@ -23,8 +22,8 @@ class GetLayoutsCommand extends Command
 
     protected function configure()
     {
-        $this->setName('current:getLayouts')
-            ->setDescription('Get list of all available layouts from current theme.');
+        $this->setName('current:getParticles')
+            ->setDescription('Get list of all available particles from current theme.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,12 +33,8 @@ class GetLayoutsCommand extends Command
             return;
         }
 
-        $result = [];
-        foreach (Finder::findFiles('*.neon')->in($this->theme->getDir() . "/layouts") as $file) {
-            $result[] = $file->getBasename('.neon');
-        }
-
-        $output->writeln(json_encode($result));
+        $config = $this->theme->getConfig();
+        $output->writeln(json_encode(empty($config["particles"]) ? [] : $config["particles"]));
     }
 
 }

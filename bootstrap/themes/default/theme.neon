@@ -1,0 +1,15 @@
+favicon: /assets/favicon.png
+color: '#ffcc00'
+media:
+    - /assets/media
+css:
+    local:
+        - /assets/css/style.less
+js:
+    local:
+        - /assets/js/jquery.js
+        - /assets/js/scripts.js
+particles:
+    welcome:
+        title: Welcome
+        description: Just a welcome title

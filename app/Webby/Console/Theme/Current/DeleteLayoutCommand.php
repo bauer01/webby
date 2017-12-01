@@ -3,13 +3,14 @@
 namespace Webby\Console\Theme\Current;
 
 
-use Nette\Utils\Finder;
+use Nette\Neon\Neon;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webby\System\Theme;
 
-class GetLayoutsCommand extends Command
+class DeleteLayoutCommand extends Command
 {
 
 
@@ -23,8 +24,9 @@ class GetLayoutsCommand extends Command
 
     protected function configure()
     {
-        $this->setName('current:getLayouts')
-            ->setDescription('Get list of all available layouts from current theme.');
+        $this->setName("current:deleteLayout")
+            ->addArgument("name", InputArgument::REQUIRED, "Layout name.")
+            ->setDescription("Delete layout in current theme.");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,12 +36,13 @@ class GetLayoutsCommand extends Command
             return;
         }
 
-        $result = [];
-        foreach (Finder::findFiles('*.neon')->in($this->theme->getDir() . "/layouts") as $file) {
-            $result[] = $file->getBasename('.neon');
+        $fileName = str_replace('/', '', $input->getArgument("name"));
+        $path = $this->theme->getDir() . "/layouts/" . $fileName . ".neon";
+        if (!is_file($path)) {
+            $output->getErrorOutput()->writeln("<error>Layout " . $fileName . " not found!</error>");
+            return;
         }
-
-        $output->writeln(json_encode($result));
+        unlink($path);
     }
 
 }

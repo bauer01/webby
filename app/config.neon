@@ -24,3 +24,58 @@ system:
     pages:
         dir: %appDir%/../content/pages
         error:
+    particles:
+        content:
+            title: Content
+            description: Page content
+        html:
+            title: HTML
+            description: HTML content
+            options:
+                code:
+                    title: Code
+                    description: HTML code
+                    type: html
+        page-title:
+            title: Page title
+        image:
+            title: Image
+            description: Link's destination
+            options:
+                src:
+                    title: Image
+                    description: Image file
+                    type: image
+                    required: true
+                alt:
+                    title: Alt
+                    description: Alternate text
+                    type: textarea
+                width:
+                    title: Width
+                    description: Width in pixels
+                    type: number
+                height:
+                    title: Height
+                    description: Height in pixels
+                    type: number
+        link:
+            title: Link
+            description: Generates page link
+            options:
+                href:
+                    title: Destination
+                    description: Link's destination
+                    type: link
+                    required: true
+                text:
+                    title: Text
+                    type: text
+                    description: Displayed text
+                    required: true
+                class:
+                    title: Class
+                    description: CSS class
+                    type: text
+        page:
+            title: Page

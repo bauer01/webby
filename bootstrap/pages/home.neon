@@ -1,0 +1,13 @@
+title: Welcome!
+theme:
+    main:
+        template: default
+        content:
+            0:
+              rows:
+                0:
+                  columns:
+                    0:
+                      particles:
+                        0:
+                          particle: system:page-title

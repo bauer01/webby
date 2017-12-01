@@ -1,0 +1,16 @@
+php:
+    timezone: Europe/Prague
+
+system:
+    url: http://example.com
+    pages:
+        language: cs
+        charset: utf-8
+        title: Webby CMS
+        description: 'Webby CMS'
+        title_delimiter: "|"
+        homepage: home
+        error: 404
+    theme:
+        current: default
+        layout: default

@@ -42,7 +42,7 @@ class System extends CompilerExtension
             "body" => []
         ],
         "menus" => [],
-        "particles" => null,
+        "particles" => [],
         "sitemap" => [
             "enabled" => true
         ],
@@ -83,7 +83,7 @@ class System extends CompilerExtension
 
         // Particles
         $builder->addDefinition($this->prefix('particles'))
-            ->setClass(Particles::class);
+            ->setClass(Particles::class, [$config["particles"]]);
 
         // Assets
         $builder->addDefinition($this->prefix('assets'))

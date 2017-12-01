@@ -9,10 +9,12 @@ class Particles
     private $invalidated = [];
     private $added = [];
     private $theme;
+    private $definitions;
 
-    public function __construct(Theme $theme)
+    public function __construct(array $definitions, Theme $theme)
     {
         $this->theme = $theme;
+        $this->definitions = $definitions;
     }
 
     /**
@@ -29,6 +31,14 @@ class Particles
     public function getAdded()
     {
         return $this->added;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefinitions()
+    {
+        return $this->definitions;
     }
 
     public function invalidate($particles)

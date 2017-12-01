@@ -11,6 +11,18 @@ $application->addCommands([
     ),
     new \Webby\Console\Theme\Current\GetLayoutsCommand(
         $container->getByType(\Webby\System\Theme::class)
+    ),
+    new \Webby\Console\Theme\Current\GetParticlesCommand(
+        $container->getByType(\Webby\System\Theme::class)
+    ),
+    new \Webby\Console\Theme\Current\UpdateLayoutCommand(
+        $container->getByType(\Webby\System\Theme::class)
+    ),
+    new \Webby\Console\Theme\Current\CreateLayoutCommand(
+        $container->getByType(\Webby\System\Theme::class)
+    ),
+    new \Webby\Console\Theme\Current\DeleteLayoutCommand(
+        $container->getByType(\Webby\System\Theme::class)
     )
 ]);
 

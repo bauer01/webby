@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webby\System\Theme;
 
-class GetLayoutCommand extends Command
+class UpdateLayoutCommand extends Command
 {
 
 
@@ -24,9 +24,10 @@ class GetLayoutCommand extends Command
 
     protected function configure()
     {
-        $this->setName('current:getLayout')
-            ->addArgument('name', InputArgument::REQUIRED, 'Theme name.')
-            ->setDescription('Get layout from current theme.');
+        $this->setName("current:updateLayout")
+            ->addArgument("name", InputArgument::REQUIRED, "Layout name.")
+            ->addArgument("content", InputArgument::REQUIRED, "Layout content in JSON format.")
+            ->setDescription("Update layout in current theme.");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -43,13 +44,15 @@ class GetLayoutCommand extends Command
             return;
         }
 
-        $output->writeln(
-            json_encode(
-                Neon::decode(
-                    file_get_contents($path)
-                )
-            )
-        );
+        if ($content = $input->getArgument("content")) {
+            $content = json_decode($content);
+            if ($jsonError = json_last_error() !== JSON_ERROR_NONE) {
+                $output->getErrorOutput()->writeln("<error>JSON content parse: " . json_last_error_msg() . "</error>");
+                return;
+            }
+            $content = Neon::encode($content, Neon::BLOCK);
+        }
+        file_put_contents($path, $content);
     }
 
 }
