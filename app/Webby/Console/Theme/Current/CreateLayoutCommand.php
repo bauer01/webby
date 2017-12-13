@@ -38,7 +38,11 @@ class CreateLayoutCommand extends Command
         }
 
         $fileName = str_replace('/', '', $input->getArgument("name"));
-        $path = $this->theme->getDir() . "/layouts/" . $fileName . ".neon";
+        if (!is_dir($dirPath = $this->theme->getDir() . "/layouts/")) {
+            mkdir($dirPath);
+        }
+
+        $path =  $dirPath . $fileName . ".neon";
         if (is_file($path)) {
             $output->getErrorOutput()->writeln("<error>Layout " . $fileName . " already exists!</error>");
             return;

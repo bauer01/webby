@@ -13,4 +13,3 @@ system:
         error: 404
     theme:
         current: default
-        layout: default

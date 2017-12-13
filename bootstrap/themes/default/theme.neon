@@ -9,7 +9,3 @@ js:
     local:
         - /assets/js/jquery.js
         - /assets/js/scripts.js
-particles:
-    welcome:
-        title: Welcome
-        description: Just a welcome title

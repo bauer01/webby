@@ -20,7 +20,7 @@ class Theme
         if (!empty($config["current"])) {
 
             $this->current = $config["current"];
-            $this->layout = $config["layout"];
+            $this->layout = empty($config["layout"]) ? false : $config["layout"];
             $this->dir = $config["dir"] . "/" . $this->current;
 
             $this->config = $this->loadFile($this->dir . "/theme.neon");
@@ -89,9 +89,11 @@ class Theme
 
     public function getLayout()
     {
-        return $this->loadResource("layouts", $this->layout);
+        if ($this->layout) {
+            return $this->loadResource("layouts", $this->layout);
+        }
+        return false;
     }
-
 
     public function getTemplate($name)
     {

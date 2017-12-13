@@ -13,7 +13,8 @@ $application->addCommands([
         $container->getByType(\Webby\System\Theme::class)
     ),
     new \Webby\Console\Theme\Current\GetParticlesCommand(
-        $container->getByType(\Webby\System\Theme::class)
+        $container->getByType(\Webby\System\Theme::class),
+        $container->getByType(\Webby\System\Particles::class)
     ),
     new \Webby\Console\Theme\Current\UpdateLayoutCommand(
         $container->getByType(\Webby\System\Theme::class)

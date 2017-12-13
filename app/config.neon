@@ -25,9 +25,6 @@ system:
         dir: %appDir%/../content/pages
         error:
     particles:
-        content:
-            title: Content
-            description: Page content
         html:
             title: HTML
             description: HTML content
@@ -36,8 +33,6 @@ system:
                     title: Code
                     description: HTML code
                     type: html
-        page-title:
-            title: Page title
         image:
             title: Image
             description: Link's destination
@@ -79,3 +74,10 @@ system:
                     type: text
         page:
             title: Page
+            description: Current page with template
+        page-content:
+            title: Page content
+            description: Content of current page
+        page-title:
+            title: Page title
+            description: Title of current page

@@ -35,10 +35,11 @@ class GetLayoutsCommand extends Command
         }
 
         $result = [];
-        foreach (Finder::findFiles('*.neon')->in($this->theme->getDir() . "/layouts") as $file) {
-            $result[] = $file->getBasename('.neon');
+        if (is_dir($path = $this->theme->getDir() . "/layouts")) {
+            foreach (Finder::findFiles('*.neon')->in($path) as $file) {
+                $result[] = $file->getBasename('.neon');
+            }
         }
-
         $output->writeln(json_encode($result));
     }
 

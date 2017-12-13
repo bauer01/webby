@@ -6,6 +6,7 @@ namespace Webby\Console\Theme\Current;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Webby\System\Particles;
 use Webby\System\Theme;
 
 class GetParticlesCommand extends Command
@@ -13,10 +14,12 @@ class GetParticlesCommand extends Command
 
 
     private $theme;
+    private $particles;
 
-    public function __construct(Theme $theme)
+    public function __construct(Theme $theme, Particles $particles)
     {
         $this->theme = $theme;
+        $this->particles = $particles;
         parent::__construct();
     }
 
@@ -33,8 +36,8 @@ class GetParticlesCommand extends Command
             return;
         }
 
-        $config = $this->theme->getConfig();
-        $output->writeln(json_encode(empty($config["particles"]) ? [] : $config["particles"]));
+        $themeConfig = $this->theme->getConfig();
+        $output->writeln(json_encode(array_merge($this->particles->getDefinitions(), empty($themeConfig["particles"]) ? [] : $themeConfig["particles"])));
     }
 
 }

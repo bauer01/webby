@@ -1,0 +1,7 @@
+{if $webby->template}
+    {foreach $webby->template as $pageTemplate}
+        {particle $pageTemplate['particle'] (expand) $pageTemplate}
+    {/foreach}
+{else}
+    {particle page-content}
+{/if}

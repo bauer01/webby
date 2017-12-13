@@ -52,36 +52,25 @@ class Particles
 
     public function add(array $config)
     {
-        $id = count($this->added);
-        $id = "particle-" . str_replace(":", "-", $config["particle"]) . "-" . (string) ($id + 1);
+        $id = implode("-", ["particle", $config["particle"], (string) (count($this->added) + 1)]);
         $this->added[$id] = $config;
         return $id;
     }
 
     public function getTemplatePath($particle)
     {
-        $parts = explode(':', $particle, 2);
-        if (count($parts) <> 2) {
-            throw new \InvalidArgumentException("Invalid particle definition '" . $particle . "'!");
+        $path = "/particles/" . $particle . ".latte";
+        $themeDir = $this->theme->getDir();
+        $parentThemeDir = $themeDir . "/../" . $this->theme->getParent();
+
+        if (is_file($themeDir . $path)) {
+            return $themeDir . $path;
+        } else if (is_file($parentThemeDir . $path)) {
+            return $parentThemeDir . $path;
+        } else if (is_file(__DIR__ . $path)) {
+            return __DIR__ . $path;
         }
-
-        $path = "/particles/" . $parts[1] . ".latte";
-        switch ($parts[0]) {
-            case "system":
-                $dir = __DIR__ . "/..";
-                break;
-            case "theme":
-
-                $dir = $this->theme->getDir();
-                if ($this->theme->getParent() && !is_file($dir . $path)) {
-                    $dir .= "/../" . $this->theme->getParent();
-                }
-                break;
-            default:
-                throw new \InvalidArgumentException("Unexpected particle type in '" . $particle . "'!");
-        }
-
-        return $dir . $path;
+        throw new \Exception("Template for particle '" . $particle . "' not found!");
     }
 
 }

@@ -193,7 +193,7 @@ class Pages
                 "link" => $link,
                 "title" => $config["title"],
                 "content" => isset($theme["content"]) ? $theme["content"] : [],
-                "template" => isset($theme["template"]) ? $this->theme->getTemplate($theme["template"]) : [],
+                "template" => isset($theme["template"]) ? $this->theme->getTemplate($theme["template"]) : false,
                 "templateDir" => __DIR__ . "/Pages",
                 "parameters" => !empty($config["parameters"]) && is_array($config["parameters"]) ? $config["parameters"] : []
             ]

@@ -21,9 +21,6 @@ $application->addCommands([
     ),
     new \Webby\Console\System\SitemapCommand(
         $container->getByType(\Webby\System\Sitemap::class)
-    ),
-    new \Webby\Console\System\Particles\GetAllCommand(
-        $container->getByType(\Webby\System\Particles::class)
     )
 ]);
 

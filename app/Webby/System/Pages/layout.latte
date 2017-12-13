@@ -34,7 +34,13 @@
     {/foreach}
 </head>
 <body>
-    {include content.latte, sections => $theme->getLayout()}
+    {if $theme->getLayout()}
+        {foreach $theme->getLayout() as $layoutParticle}
+            {particle $layoutParticle['particle'] (expand) $layoutParticle}
+        {/foreach}
+    {else}
+        {particle page}
+    {/if}
     <script src="{$baseUrl}/assets/scripts.js"></script>
     {foreach $pages->getBody() as $body}
         {$body|noescape}
