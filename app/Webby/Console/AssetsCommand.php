@@ -7,6 +7,8 @@ use Assetic\Asset\HttpAsset;
 use Assetic\AssetManager;
 use Assetic\AssetWriter;
 use Assetic\Filter\CssImportFilter;
+use Assetic\Filter\CssMinFilter;
+use Assetic\Filter\JSMinFilter;
 use Assetic\Filter\LessFilter;
 use Assetic\Filter\ScssphpFilter;
 use Nette\InvalidArgumentException;
@@ -17,8 +19,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Webby\System\Assets;
 use Webby\System\Theme;
 
+class_alias("JSMin\JSMin", "JSMin");
+
 class AssetsCommand extends Command
 {
+
 
     private $assets;
     private $theme;
@@ -108,37 +113,9 @@ class AssetsCommand extends Command
                 }
 
                 foreach (Finder::findFiles("*")->in($sourcePath) as $file) {
-                    $this->copyAndCompress($file->getPathname(), $outputPath . "/" . $file->getFilename());
+                    copy($file->getPathname(), $outputPath . "/" . $file->getFilename());
                 }
             }
-        }
-    }
-
-    private function copyAndCompress($src, $dest, $quality = 75)
-    {
-        $info = getimagesize($src);
-
-        if ($info['mime'] == 'image/jpeg') {
-
-            $image = imagecreatefromjpeg($src);
-            //save file
-            imagejpeg($image, $dest, $quality);//ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default is the default IJG quality value (about 75).
-            //Free up memory
-            imagedestroy($image);
-        } elseif ($info['mime'] == 'image/png') {
-
-            $image = imagecreatefrompng($src);
-
-            imageAlphaBlending($image, true);
-            imageSaveAlpha($image, true);
-
-            /* chang to png qulity */
-            $png_quality = 9 - (($quality * 9 ) / 100 );
-            imagePng($image, $dest, $png_quality);//Compression level: from 0 (no compression) to 9.
-            //Free up memory
-            imagedestroy($image);
-        } else {
-            copy($src, $dest);
         }
     }
 
@@ -149,7 +126,15 @@ class AssetsCommand extends Command
             // CDN
             if (!empty($assets["cdn"])) {
                 foreach (array_reverse($assets["cdn"]) as $url) {
-                    $this->{$type}->add(new HttpAsset($url));
+
+                    $filters = [];
+                    if ($type === "css") {
+                        $filters[] = new CssMinFilter();
+                    } else if ($type === "js") {
+                        $filters[] = new JSMinFilter();
+                    }
+
+                    $this->{$type}->add(new HttpAsset($url, $filters));
                 }
             }
 
@@ -176,6 +161,9 @@ class AssetsCommand extends Command
                                 $filters[] = new ScssphpFilter();
                                 break;
                         }
+                        $filters[] = new CssMinFilter();
+                    } else if ($type === "js") {
+                        $filters[] = new JSMinFilter();
                     }
 
                     $this->{$type}->add(new FileAsset($filePath, $filters));

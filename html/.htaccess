@@ -17,6 +17,18 @@
 	RewriteRule !\.(pdf|js|ico|gif|jpg|png|css|rar|zip|tar\.gz|map)$ index.php [L]
 </IfModule>
 
+FileETag None
+<IfModule mod_headers.c>
+    Header unset ETag
+</IfModule>
+
+<IfModule mod_expires.c>
+    <FilesMatch "\.(?i:gif|jpe?g|png|js|css|swf|ico|woff|svg)$">
+        ExpiresActive on
+        ExpiresDefault "access plus 365 days"
+    </Filesmatch>
+</IfModule>
+
 # enable gzip compression
 <IfModule mod_deflate.c>
 	<IfModule mod_filter.c>
