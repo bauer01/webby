@@ -1,5 +1,5 @@
 {
-	"name": "webby/webby",
+	"name": "bauer01/webby",
 	"type": "project",
 	"description": "A lightweight flat-file CMS based on Nette framework",
 	"keywords": ["cms","flat-file","flat","flatfile","php","nette"],
